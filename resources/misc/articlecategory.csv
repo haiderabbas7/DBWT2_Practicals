@@ -1,0 +1,22 @@
+id;ab_name;ab_parent
+1;Auto;NULL
+2;Autos;1
+3;Autoteile & Reifen;1
+4;Reperaturen und Dienstleistungen;1
+5;Sonstige Auto;1
+6;Elektronik;NULL
+7;Audio&Hifi;6
+8;Dienstleistungen Elektronik;6
+9;Foto;6
+10;Handy&Telefon;6
+11;Haushaltsgeräte;6
+12;Konsolen;6
+13;Notebooks;6
+14;PCs;6
+15;Sonstige Foto;6
+16;Immobilien;NULL
+17;Eigentumswohnungen;16
+18;Garagen&Stellplätze;16
+19;Häuser zum Kauf;16
+20;Häuser zur Miete;16
+21;Sonstige Immobilien;16

@@ -1,0 +1,8 @@
+id;ab_name;ab_password;ab_mail
+1;admin;admin;admin@abalo.example.com
+2;visitor;visitor;visitor@abalo.example.com
+3;visitor2;visitor2;visitor2@abalo.example.com
+4;visitor3;visitor3;visitor3@abalo.example.com
+5;seller;seller;seller@abalo.example.com
+6;seller2;seller2;seller2@abalo.example.com
+7;seller3;seller3;seller3@abalo.example.com

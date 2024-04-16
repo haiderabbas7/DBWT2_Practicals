@@ -1,0 +1,31 @@
+id;ab_name;ab_price;ab_description;ab_creator_id;ab_createdate
+1;DeLorean DMC-12;30.000;"Wagen aus dem Film ""Zurück in die Zukunft"" zu verkaufen";5;19.12.20 13:00
+2;Lotus Esprit S1;25.500;"Wagen aus dem Film ""007 - Der Spion, der mich liebte""";6;20.12.20 14:00
+3;Toyota Supra;15.250;"Wagen aus dem Film ""The Fast and the Furious""";7;21.12.20 15:00
+4;VW Käfer;8.000;"Ein kleines, schickes Auto bekannt durch ""Herbie""";5;22.12.20 13:00
+5;Endschalldämpfer;300;Wenn der Wagen mal wieder zu laut ist;5;23.12.20 16:00
+6;Katalysator;250;Perfekte Entsorgung der Abgase;6;24.12.20 17:00
+7;Bremsscheiben;100;Verkaufe fast neue Bremsscheiben;7;25.12.20 18:00
+8;Scheinwerfer;80;Hauptscheinwerfer bei Dunkelheit;7;26.12.20 13:00
+9;Motorinstandsetzung;450;Ich biete meine Dienste für die Reperatur von Motoren an;6;27.12.20 13:00
+10;Tachoreperatur;200;Hilfe für defekter Tacho Software /Hardware;6;28.12.20 13:00
+11;Wartungsanleitung;30;Verkaufe meine Wartungsanleitung für den DeLorean DMC-12;5;29.12.20 13:00
+12;Reifen Continental;60;Breite: 195, Quer: 65, Zoll: 15;6;30.12.20 13:00
+13;Reifen Pirelli;65;Breite: 195, Quer: 65, Zoll: 15;7;31.12.20 13:00
+14;Reifen Michelin;67;Breite: 195, Quer: 65, Zoll: 15;5;1.1.21 13:00
+15;Reifen Bridgestone;70;Breite: 195, Quer: 65, Zoll: 15;6;2.1.21 13:00
+16;UKW Radio;33;Marke: TechniSat , besitzt DAB+AM & FM, mit Antenne;5;30.12.20 13:00
+17;HiFi-Reciver;29;Marke Sony , 725 Watt, Schwart;6;31.12.20 13:00
+18;Plattenspieler;300;Ich verkaufe meinen alten guten Plattenspieler;7;1.1.21 13:00
+19;Kompaktanlage;175;Nach Hausauflösung muss ich mich nun vom meiner geliebten Kompaktanlage trennen. ;7;2.1.21 13:00
+20;AV-Receiver;120;AV-Receiver für alle Arten von Boxen, WLAN tauglich;7;3.1.21 13:00
+21;Lautsprecher;115;BOSE Lautsprecher zu verkaufen;6;4.1.21 13:00
+22;Speaker;90;Speaker Bundle (Google,Amazon,JBL) für einen Preis;6;5.1.21 13:00
+23;Kopfhörer;30;"Fast neuwertige ""Teufel""-Kopfhörer zu verkaufen";6;6.1.21 13:00
+24;Iphone 8;599;64 GB, Saphirblack, minimale Gebrauchsspuren;5;7.1.21 13:00
+25;Iphone X;999;128 GB, fette Kamera mit Filtern, Akku Defekt;5;8.1.21 13:00
+26;Iphone 7;399;32GB, IOS 6 installiert, Jailbreaked;6;9.1.21 13:00
+27;Samsung Galaxy A51;250;128 GB, Android 10.0, 32MP Kamera;6;10.1.21 13:00
+28;LG G8s ThinQ;300;128 GB, Mirror Black, gebraucht;7;11.1.21 13:00
+29;Huawei P30 lite;180;128 GB, Midnight Black, fast neuwertig;7;12.1.21 13:00
+30;AVM FRITZ!Fon;30;Modell: C5 (DECT), 300m maximale Entfernung (draußen), 40m maximale Entfernung (drinnen);5;13.1.21 13:00
