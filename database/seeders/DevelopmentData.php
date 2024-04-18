@@ -23,33 +23,15 @@ class DevelopmentData extends Seeder
         $this->seed_articlecategories();
     }
 
-    /*private function seedTable(string $tableName, string $fileName) : void
-    {
-        if(($handle = fopen($fileName, 'r')) !== false) {
-            $header = fgetcsv($handle, 1000, ';'); // column names
-            while($data = fgetcsv($handle, 1000 , ';')) {
-                $data = array_map(function($value) { return $value === 'NULL' ? null : $value; }, $data); // Replace 'NULL' with null
-                $data = array_map('utf8_encode', $data); // Encode data to UTF-8
-                $row = array_combine($header, $data);
-                DB::table($tableName)->insert($row);
-            }
-        }
-        fclose($handle);
-    }*/
-
     private function read_csv_into_array(string $fileName) : array
     {
         $entries = [];
         $handle = fopen(__DIR__ . '/../../resources/misc/' . $fileName, 'r');
         if ($handle !== false) {
-            // Read the file until EOF is reached
             while (!feof($handle)) {
-                // Read a line from the CSV file
                 $line = fgetcsv($handle, 1000, ';');
 
-                // Check if a line was successfully read
                 if ($line !== false) {
-                    // Add the line to the entries array
                     $entries[] = $line;
                 }
             }
