@@ -6,7 +6,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/testdata',[\App\Http\Controllers\AbTestDataController::class,'index']);
+Route::get('/testdata',[\App\Http\Controllers\TestDataController::class,'index']);
 
 Route::get('/login', [App\Http\Controllers\AuthController::class, 'login'])->name('login');
 Route::get('/logout', [App\Http\Controllers\AuthController::class, 'logout'])->name('logout');

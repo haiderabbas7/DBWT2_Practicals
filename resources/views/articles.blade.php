@@ -20,11 +20,11 @@
         @foreach($articles_req as $article)
             <tr>
                 <td>{{$article->id}} </td>
-                <td>{{$article->ab_name}}</td>
-                <td>{{$article->ab_price}}</td>
-                <td>{{$article->ab_description}}</td>
-                <td>{{$article->ab_creator_id}}</td>
-                <td>{{$article->ab_createdate}}</td>
+                <td>{{$article->name}}</td>
+                <td>{{$article->price}}</td>
+                <td>{{$article->description}}</td>
+                <td>{{$article->creator_id}}</td>
+                <td>{{$article->createdate}}</td>
                 <td><img src="{{asset($article->image_path)}}" alt="Article Image"></td>
             </tr>
       @endforeach

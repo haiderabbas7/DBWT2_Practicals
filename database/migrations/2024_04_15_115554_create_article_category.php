@@ -11,19 +11,19 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('ab_articlecategory', function (Blueprint $table) {
+        Schema::create('articlecategory', function (Blueprint $table) {
             $table->id();
 
-            $table->string('ab_name',100)
+            $table->string('name',100)
                 ->nullable(false)
                 ->unique(true)
                 ->comment("Name");
 
-            $table->string('ab_description',1000)
+            $table->string('description',1000)
                 ->nullable()
                 ->comment("Beschreibung");
 
-            $table->unsignedBigInteger("ab_parent")
+            $table->unsignedBigInteger("parent")
                 ->nullable()
                 ->comment("Referenz auf die mögliche Elternkategorie.
                                     Artikelkategorien sind hierarchisch organisiert. Eine Kategorie
@@ -31,8 +31,8 @@ return new class extends Migration
                                     nur eine Elternkategorie besitzen.
                                     NULL, falls es keine Elternkategorie gibt und es sich um eine
                                     Wurzelkategorie handelt.");
-            $table->foreign("ab_parent")
-                ->on("ab_article")
+            $table->foreign("parent")
+                ->on("article")
                 ->references("id");
         });
     }
@@ -42,6 +42,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('ab_articlecategory');
+        Schema::dropIfExists('articlecategory');
     }
 };

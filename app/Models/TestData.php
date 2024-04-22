@@ -2,9 +2,9 @@
 
 namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
-class AbTestData extends Model
+class TestData extends Model
 {
     protected $primaryKey = 'id';
-    protected $table = 'ab_testdata';
+    protected $table = 'testdata';
     public $timestamps = false;
 }

@@ -3,23 +3,23 @@
 namespace Database\Factories;
 
 use App\Helpers\UserHelper;
-use App\Models\Ab_User;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
 /**
- * @extends Factory<Ab_User>
+ * @extends Factory<User>
  */
-class Ab_UserFactory extends Factory
+class UserFactory extends Factory
 {
 
     public function definition(): array
     {
         return [
-            'ab_name' => fake()->name(),
+            'name' => fake()->name(),
             //Str::random erzeugt nen random String mit der angegebenen Länge
-            'ab_password' => sha1(UserHelper::get_salt() . Str::random(15)),
-            'ab_mail' => fake()->unique()->safeEmail()
+            'password' => sha1(UserHelper::get_salt() . Str::random(15)),
+            'mail' => fake()->unique()->safeEmail()
         ];
     }
 }

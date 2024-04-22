@@ -5,13 +5,15 @@ CREATE DATABASE abalo
 
 CREATE SCHEMA IF NOT EXISTS public;
 
-CREATE TABLE ab_testdata(
+CREATE TABLE testdata(
                             id INT8 PRIMARY KEY,
-                            ab_testname VARCHAR(80) NOT NULL UNIQUE
+                            testname VARCHAR(80) NOT NULL UNIQUE
 );
 
-INSERT INTO ab_testdata (id,ab_testname) VALUES
+INSERT INTO testdata (id,testname) VALUES
                                              (1,'Fotokamera'),(2,'Blitzlicht');
 
-DELETE FROM ab_article;
-DELETE FROM ab_user;
+DELETE FROM article;
+DELETE FROM user;
+
+DROP TABLE testdata;

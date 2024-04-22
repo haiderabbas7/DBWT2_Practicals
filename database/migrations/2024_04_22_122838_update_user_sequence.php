@@ -13,11 +13,11 @@ return new class extends Migration
     public function up(): void
     {
         /* Zum einmaligen Resetten der Sequenz
-        $maxId = DB::table('ab_user')->max('id');
-        DB::statement("ALTER SEQUENCE ab_user_id_seq RESTART WITH " . ($maxId + 1));*/
+        $maxId = DB::table('user')->max('id');
+        DB::statement("ALTER SEQUENCE user_id_seq RESTART WITH " . ($maxId + 1));*/
 
         //Setzt die Sequenz der Primärschlüssel, sodass sie von den Daten in der Tabelle abhängt
-        DB::statement("SELECT setval('ab_user_id_seq', (SELECT MAX(id) FROM ab_user))");
+        DB::statement("SELECT setval('user_id_seq', (SELECT MAX(id) FROM user))");
     }
 
     /**

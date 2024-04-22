@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Ab_User;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -35,6 +35,6 @@ class TestController
             $entries[] = $header;
         }
         fclose($handle);
-        return response()->json(Ab_User::factory()->count(10)->make());
+        return response()->json(User::factory()->count(10)->make());
     }
 }

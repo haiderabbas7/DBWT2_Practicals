@@ -11,30 +11,30 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('ab_article', function (Blueprint $table) {
+        Schema::create('article', function (Blueprint $table) {
             $table->id();
 
-            $table->string("ab_name",80)
+            $table->string("name",80)
                 ->nullable(false)
                 ->comment("Name");
 
-            $table->integer("ab_price")
+            $table->integer("price")
                 ->nullable(false)
                 ->comment("Preis in Cent");
 
-            $table->string("ab_description",1000)
+            $table->string("description",1000)
                 ->nullable(false)
                 ->comment("Beschreibung, die die Güte oder die Beschaffenheit näher darstellt.
-                                    Wird durch den „Ersteller“ (ab_user) gepflegt");
+                                    Wird durch den „Ersteller“ (user) gepflegt");
 
-            $table->unsignedBigInteger("ab_creator_id")
+            $table->unsignedBigInteger("creator_id")
                 ->nullable(false)
                 ->comment("Referenz auf den/die Nutzer:in, der den Artikel erstellt hat und verkaufen möchte");
-            $table->foreign("ab_creator_id")
-                ->on("ab_user")
+            $table->foreign("creator_id")
+                ->on("user")
                 ->references("id");
 
-            $table->timestamp("ab_createdate")
+            $table->timestamp("createdate")
                 ->nullable(false)
                 ->comment("Zeitpunkt der Erstellung des Artikels");
         });
@@ -45,6 +45,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('ab_article');
+        Schema::dropIfExists('article');
     }
 };
