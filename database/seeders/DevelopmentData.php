@@ -6,6 +6,7 @@ namespace Database\Seeders;
 use App\Helpers\UserHelper;
 use App\Models\Ab_Article;
 use App\Models\Ab_User;
+use Carbon\Carbon;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -67,13 +68,16 @@ class DevelopmentData extends Seeder
             $ab_article->ab_creator_id = $arr[$i][4];
             $ab_article->ab_createdate = $arr[$i][5];
             $ab_article->save();*/
+            $unformattedTimestamp = Carbon::createFromFormat('d.m.y H:i', $arr[$i][5]);
+            $formattedTimestamp = $unformattedTimestamp->format('Y-m-d H:i:s');
+
             DB::table('ab_article')->insert([
                 'id' => $arr[$i][0],
                 'ab_name' => $arr[$i][1],
                 'ab_price' => intval($arr[$i][2]),
                 'ab_description' => $arr[$i][3],
                 'ab_creator_id' => $arr[$i][4],
-                'ab_createdate' => $arr[$i][5],
+                'ab_createdate' => $formattedTimestamp,
             ]);
         }
     }
