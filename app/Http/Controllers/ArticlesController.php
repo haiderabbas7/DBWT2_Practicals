@@ -33,7 +33,7 @@ class ArticlesController
     /**
      * Returns the image path to the given article id
      *
-     * @param string $articleId The ArticleId to find the image
+     * @param string $articleId The images/titleId to find the image
      * @return string Path to the image
      */
     public function getArticleImagePath(String $articleId): String {
@@ -45,7 +45,7 @@ class ArticlesController
         } else if (file_exists($imagePathJpg)) {
             return "images/article_images/$articleId.jpg";
         } else {
-            return "";
+            return "images/Placeholder_view_vector.svg.png"; // Placeholder
         }
     }
 }
