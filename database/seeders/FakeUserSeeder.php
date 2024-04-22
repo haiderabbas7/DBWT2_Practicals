@@ -9,8 +9,7 @@ class FakeUserSeeder extends Seeder
 {
     public function run(): void
     {
-        //create = generieren und direkt in Tabelle einfügen
-        //Ab_User::factory()->count(10)->create();
+        //create = generieren und direkt in Tabelle einfügen, make() erstellt nur die Daten
         Ab_User::factory()->count(20)->create();
     }
 }

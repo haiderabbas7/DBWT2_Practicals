@@ -6,16 +6,9 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('ab_user', function (Blueprint $table) {
-            /* Das hier eigentlich auch richtig, aber id() passt besser
-             * $table->unsignedTinyInteger('id')
-                ->comment("Primärschlüssel")
-                ->primary('id');*/
             $table->id();
 
             $table->string('ab_name',80)

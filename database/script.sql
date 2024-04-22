@@ -12,3 +12,6 @@ CREATE TABLE ab_testdata(
 
 INSERT INTO ab_testdata (id,ab_testname) VALUES
                                              (1,'Fotokamera'),(2,'Blitzlicht');
+
+DELETE FROM ab_article;
+DELETE FROM ab_user;

@@ -59,7 +59,6 @@ class DevelopmentData extends Seeder
 
         for($i = 1; $i < sizeof($arr); $i++){
             /*
-            ORM dafür benutzen ist echt fucking weird
             $ab_article = new Ab_Article();
             $ab_article->primaryKey = $arr[$i][0];
             $ab_article->ab_name = $arr[$i][1];
