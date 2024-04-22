@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\AbTestData;
 
-class AbTestDataController extends Controller
+class AbTestDataController 
 {
     public function index(){
         $testData = AbTestData::all();
