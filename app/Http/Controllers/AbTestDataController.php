@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\AbTestData;
 use Illuminate\Routing\Controller;
 
-class AbTestDataController 
+class AbTestDataController
 {
     public function index(){
         $testData = AbTestData::all();
