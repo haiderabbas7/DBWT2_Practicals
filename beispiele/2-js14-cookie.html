@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <script>
+        "use strict";
+
+        let b = document.createElement("button");
+        b.setAttribute("onclick",'document.cookie = "counter=0";window.location.reload();');
+        document.body.append(b);
+
+        let cookies = document.cookie.split("; ");
+        let counter = cookies[1].substring(cookies[1].indexOf("=") + 1);
+
+        if(!counter){
+            document.cookie = "counter=0";
+        }
+        else{
+            counter++;
+            document.cookie = "counter=" + counter;
+        }
+        console.log(counter);
+    </script>
+</body>
+</html>

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <script>
+        'use strict';
+
+        function foo(func, a, b){
+            return func(a,b);
+        }
+
+        console.log("Ergebnis: " + foo(function an (a,b){
+                return a + b; },1,2));
+    </script>
+</body>
+</html>

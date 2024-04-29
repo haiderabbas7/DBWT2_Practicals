@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <script>
+        "use strict";
+        // Erstellen Sie ein neues div-Element
+        let div = document.createElement('div');
+
+        // Setzen Sie den Inhalt (Text) des div-Elements
+        div.textContent = "Ihr Text hier";
+
+        // Setzen Sie die CSS-Eigenschaften des div-Elements
+        div.style.position = "absolute";
+        div.style.bottom = "0px";
+        div.style.width = "100%";
+        div.style.height = "50px";
+        div.style.backgroundColor = "rgba(0,0,0,0.7)";
+        div.style.color = "white";
+        div.style.textAlign = "center";
+        div.style.padding = "20px";
+
+        // Fügen Sie das div-Element zum body des Dokuments hinzu
+        document.body.appendChild(div);
+    </script>
+</body>
+</html>

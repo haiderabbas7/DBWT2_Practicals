@@ -1,0 +1,54 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Erstes JavaScript</title>
+</head>
+<body>
+<script>
+    'use strict';
+
+    let arr = ["erstes", "zweites", 3, 4];
+
+    for(let i = 0; i < arr.length; i++){
+        console.log("FOR-SCHLEIFE: " + i + " => " + arr[i]);
+    }
+
+    arr.forEach(function(a,b){
+        console.log("FOREACH: " + b + " => " + a);
+    })
+
+    let x = 0;
+    for(const elem of arr){
+        console.log("FOR...OF: " + x++ + " => " + elem);
+    }
+
+    arr.push("fuenftes");
+    arr.push("sechstes");
+    console.log("NACH INPUT: " + arr.join(", "));
+    arr.pop();
+    console.log("NACH POP: " + arr.join(", "));
+    arr[1] = 2;
+    console.log("NACH VERÄNDERN: " + arr.join(", "));
+
+    let arr2 = [9,8,7,6,5,4,3,2,1]
+    console.log("ARRAY LENGTH: " + arr2.length);
+    arr2.sort(function(a,b){
+        return a - b;
+    })
+    console.log("ARRAY SORT: " + arr2.join(", "));
+    console.log("ARRAY FIND: " + arr2.find(function(a){
+        return a === 6;
+    }));
+    let arr3 = arr2.filter(function(a){
+        return a > 4;
+    });
+    console.log("ARRAY FILTER: " + arr3.join(", "));
+    let arr4 = arr2.map(function(a){
+        return a*2;
+    })
+    console.log("ARRAY MAP: " + arr4.join(", "));
+    let arr5 = arr2.slice(3,6);
+    console.log("ARRAY SLICE: " + arr5.join(", "));
+</script>
+</body>
+</html>

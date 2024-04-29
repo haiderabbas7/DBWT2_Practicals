@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <script>
+        "use strict";
+        let form = document.createElement('form');
+        form.setAttribute('id','form');
+        document.body.append(form);
+
+        let label = document.createElement('label');
+        label.setAttribute('for', 'dropdown');
+        label.textContent = "Drop Down menü"
+        document.getElementById('form').append(label);
+
+        let dropdown = document.createElement('select');
+        dropdown.setAttribute('id', 'dropdown');
+        document.getElementById('form').append(dropdown);
+
+        let option1 = document.createElement('option');
+        option1.setAttribute('value', 'option 1');
+        option1.textContent = "option 1";
+        document.getElementById('dropdown').append(option1);
+
+        let option2 = document.createElement('option');
+        option2.setAttribute('value', 'option 2');
+        option2.textContent = "option 2";
+        document.getElementById('dropdown').append(option2);
+
+
+    </script>
+</body>
+</html>

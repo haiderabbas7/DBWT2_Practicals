@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <script>
+        "use strict";
+        let s = navigator.userAgent;
+
+        if (s.indexOf("Chrome") !== -1) {
+            console.log("Chrome");
+        } else if (s.indexOf("Safari") !== -1) {
+            console.log("Safari");
+        } else if (s.indexOf("Firefox") !== -1) {
+            console.log("Firefox");
+        } else if (s.indexOf("MSIE") !== -1 || s.indexOf("Trident") !== -1) {
+            console.log("Internet Explorer");
+        } else {
+            console.log("Browser not identified");
+        }
+    </script>
+</body>
+</html>
