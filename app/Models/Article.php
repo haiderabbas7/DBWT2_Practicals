@@ -11,9 +11,14 @@ class Article extends Model
     public $table = 'article';
     public $primaryKey = 'id';
     public $timestamps = false;
+    public $incrementing = false;
+
+
     public $name = 'name';
     public $price = 'price';
     public $description = 'description';
     public $creator_id = 'creator_id';
     public $createdate = 'createdate';
+
+    protected $fillable = ['name', 'price', 'description', 'creator_id', 'createdate']; // The attributes that are mass assignable
 }

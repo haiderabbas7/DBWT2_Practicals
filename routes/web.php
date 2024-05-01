@@ -9,7 +9,7 @@ Route::get('/welcome', function () {
     return view('welcome');
 });
 
-Route::get('/test', [App\Http\Controllers\TestController::class, 'test'])->name('test');
+Route::any('/test', [App\Http\Controllers\TestController::class, 'test'])->name('test');
 Route::view('/testview', 'testview');
 
 Route::get('/testdata',[\App\Http\Controllers\TestDataController::class,'index']);

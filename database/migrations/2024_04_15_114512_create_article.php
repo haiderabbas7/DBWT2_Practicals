@@ -31,7 +31,7 @@ return new class extends Migration
                 ->nullable(false)
                 ->comment("Referenz auf den/die Nutzer:in, der den Artikel erstellt hat und verkaufen möchte");
             $table->foreign("creator_id")
-                ->on("user")
+                ->on("benutzer")
                 ->references("id");
 
             $table->timestamp("createdate")

@@ -13,7 +13,14 @@ CREATE TABLE testdata(
 INSERT INTO testdata (id,testname) VALUES
                                              (1,'Fotokamera'),(2,'Blitzlicht');
 
-DELETE FROM article;
+DELETE FROM article WHERE id > 30;
 DELETE FROM user;
 
-DROP TABLE testdata;
+DROP TABLE article_has_articlecategory;
+DROP TABLE article;
+DROP TABLE articlecategory;
+DROP TABLE benutzer;
+
+DROP TABLE migrations;
+
+SELECT setval('article_id_seq', (SELECT MAX(id) FROM article));

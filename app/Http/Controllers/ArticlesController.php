@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Article;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -50,31 +51,29 @@ class ArticlesController
     }
 
     public function getNewArticleInfo(){
-        return view('newarticle');
+        $con = true;
+        return view('newarticle', ['con' => $con]);
     }
 
+
     public function createNewArticle(Request $request){
-        /*
-         * HIER MUSS GEMACHT WERDEN:
-         * -hier ganzen kack mit sessions entfernen, sitzungen werden serversided gespeichert, also kann ich mit JS in der View eh nicht auf session vars zugreifen
-         * stattdessen abhängig von success oder failure eine einfache variable belegen
-         * und keine redirects machen, sondern einfach die view mit der variable zurückgeben
-         * und dann in der view mit @json() auf variable zugreifen und alert() machen, wenn fehler
-         * NICHT VERGESSEN DAS ZU TESTEN!
-         *
-         * -bei success in DB persistieren, dazu mit model machen
-         */
         $name = $request->input('name');
         $price = $request->input('price');
         $description = $request->input('description');
-        var_dump($description);
+        $con = true;
         if($name === "" || !is_numeric($price) || $price <= 0){
-            session()->flash('newarticle_error');
+            $con = false;
         }
         else{
-            //in DB speichern
-            session()->flash('newarticle_success');
+            Article::create([
+                'name' => $name,
+                'price' => $price,
+                'description' => $description,
+                //placeholder, creator_id muss ja in login iwie gesetzt werden und kb darauf
+                'creator_id' => 1,
+                'createdate' => now()
+            ]);
         }
-        return redirect()->route('newarticle');
+        return view('newarticle', ['con' => $con]);
     }
 }

@@ -40,6 +40,11 @@
 <script>
     "use strict";
 
+    let con = @json($con);
+    if(con === false){
+        alert('Bitte geben Sie gültige Werte ein.');
+        con = true;
+    }
 
     let form = document.createElement('form');
     form.setAttribute('method', 'post');

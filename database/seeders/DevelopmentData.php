@@ -4,8 +4,8 @@ namespace Database\Seeders;
 
 
 use App\Helpers\UserHelper;
-use App\Models\Ab_Article;
-use App\Models\Ab_User;
+use App\Models\Article;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -19,9 +19,11 @@ class DevelopmentData extends Seeder
      */
     public function run(): void
     {
-        $this->seed_users();
+        $this->seed_benutzer();
         $this->seed_articles();
         $this->seed_articlecategories();
+        //WENN ES PROBLEME MIT DEN SEQUENZEN GIBT, SCHREIB MIR EINE METHODE ZUM MANUELLEN UPDATEN DER SEQUENZEN
+        //$this->updateAllIDSequences();
     }
 
     private function read_csv_into_array(string $fileName) : array
@@ -41,15 +43,16 @@ class DevelopmentData extends Seeder
         return $entries;
     }
 
-    private function seed_users()
+    private function seed_benutzer()
     {
         $arr = $this->read_csv_into_array('user.csv');
         for($i = 1; $i < sizeof($arr); $i++){
-            DB::table('ab_user')->insert([
-                'id' => $arr[$i][0],
-                'ab_name' => $arr[$i][1],
-                'ab_password' => sha1(UserHelper::get_salt() . $arr[$i][2]),
-                'ab_mail' => $arr[$i][3]
+            DB::table('benutzer')->insert([
+                //MUSS ENTFERNT WERDEN, DAMIT DIE SEQUENZEN BENUTZT WERDEN
+                //'id' => $arr[$i][0],
+                'name' => $arr[$i][1],
+                'password' => sha1(UserHelper::get_salt() . $arr[$i][2]),
+                'mail' => $arr[$i][3]
             ]);
         }
     }
@@ -59,25 +62,17 @@ class DevelopmentData extends Seeder
         $arr = $this->read_csv_into_array('article.csv');
 
         for($i = 1; $i < sizeof($arr); $i++){
-            /*
-            $ab_article = new Ab_Article();
-            $ab_article->primaryKey = $arr[$i][0];
-            $ab_article->ab_name = $arr[$i][1];
-            $ab_article->ab_price = $arr[$i][2];
-            $ab_article->ab_description = $arr[$i][3];
-            $ab_article->ab_creator_id = $arr[$i][4];
-            $ab_article->ab_createdate = $arr[$i][5];
-            $ab_article->save();*/
             $unformattedTimestamp = Carbon::createFromFormat('d.m.y H:i', $arr[$i][5]);
             $formattedTimestamp = $unformattedTimestamp->format('Y-m-d H:i:s');
 
-            DB::table('ab_article')->insert([
-                'id' => $arr[$i][0],
-                'ab_name' => $arr[$i][1],
-                'ab_price' => intval($arr[$i][2]),
-                'ab_description' => $arr[$i][3],
-                'ab_creator_id' => $arr[$i][4],
-                'ab_createdate' => $formattedTimestamp,
+            DB::table('article')->insert([
+                //MUSS ENTFERNT WERDEN, DAMIT DIE SEQUENZEN BENUTZT WERDEN
+                //'id' => $arr[$i][0],
+                'name' => $arr[$i][1],
+                'price' => intval($arr[$i][2]),
+                'description' => $arr[$i][3],
+                'creator_id' => $arr[$i][4],
+                'createdate' => $formattedTimestamp,
             ]);
         }
     }
@@ -86,10 +81,11 @@ class DevelopmentData extends Seeder
     {
         $arr = $this->read_csv_into_array('articlecategory.csv');
         for($i = 1; $i < sizeof($arr); $i++){
-            DB::table('ab_articlecategory')->insert([
-                'id' => $arr[$i][0],
-                'ab_name' => $arr[$i][1],
-                'ab_parent' => ($arr[$i][2] === "NULL") ? null : $arr[$i][2]
+            DB::table('articlecategory')->insert([
+                //MUSS ENTFERNT WERDEN, DAMIT DIE SEQUENZEN BENUTZT WERDEN
+                //'id' => $arr[$i][0],
+                'name' => $arr[$i][1],
+                'parent' => ($arr[$i][2] === "NULL") ? null : $arr[$i][2]
             ]);
         }
     }

@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Article;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
 class TestController
 {
-    public function test(){
+    public function test(Request $request){
         /*$csvFile = file('..\..\dbwt2\resources\misc\article.csv');
         $data = [];
         foreach ($csvFile as $line) {
@@ -26,15 +27,27 @@ class TestController
                 $row = array_combine($header, $data);
             }
         }*/
+        /*$name = $request->input('name');
+        $price = $request->input('price');
+        $description = $request->input('description');*/
 
 
-        $entries = [];
+        /*$entries = [];
         $handle = fopen(__DIR__ . '/../../../resources/misc/' . 'article.csv', 'r');
         for($i = 0; $i < 20; $i++) {
             $header = fgetcsv($handle, 1000, ';');
             $entries[] = $header;
         }
-        fclose($handle);
-        return response()->json(User::factory()->count(10)->make());
+        fclose($handle);*/
+
+        $artikel = Article::create([
+            'name' => 'London to Paris',
+            'price' => 123,
+            'description' => "abc",
+            'creator_id' => 1,
+            'createdate' => now()
+        ]);
+
+        return response()->json();
     }
 }
