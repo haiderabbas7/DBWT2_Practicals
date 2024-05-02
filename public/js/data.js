@@ -47,6 +47,7 @@ function getPreisSum(data){
     return sum;
 }
 
+//gesamtwert = preis * anzahl für alle Produkte
 function getGesamtWert(data){
     let sum = 0;
     for(let produkt of data.produkte){
@@ -65,8 +66,8 @@ function getAnzahlProdukteOfKategorie(data, kategorie){
     return sum;
 }
 
-/*console.log(getMaxPreis(data));
+console.log(getMaxPreis(data));
 console.log(getMinPreisProdukt(data));
 console.log(getPreisSum(data));
 console.log(getGesamtWert(data));
-console.log(getAnzahlProdukteOfKategorie(data, 1));*/
+console.log(getAnzahlProdukteOfKategorie(data, 1));

@@ -41,9 +41,13 @@
     "use strict";
 
     let con = @json($con);
-    if(con === false){
-        alert('Bitte geben Sie gültige Werte ein.');
-        con = true;
+    if(con === 2){
+        alert('Bitte geben Sie gültige Werte ein: Kein leerer Name und nur positive Werte für Preis.');
+        con = 1;
+    }
+    else if(con === 3){
+        alert('Fehler beim Einfügen in Datenbank, bitte gültige Werte eingeben.');
+        con = 1;
     }
 
     let form = document.createElement('form');

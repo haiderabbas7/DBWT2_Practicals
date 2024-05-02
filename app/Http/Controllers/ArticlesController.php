@@ -51,7 +51,7 @@ class ArticlesController
     }
 
     public function getNewArticleInfo(){
-        $con = true;
+        $con = 1;
         return view('newarticle', ['con' => $con]);
     }
 
@@ -60,19 +60,26 @@ class ArticlesController
         $name = $request->input('name');
         $price = $request->input('price');
         $description = $request->input('description');
-        $con = true;
+        $con = 1;
         if($name === "" || !is_numeric($price) || $price <= 0){
-            $con = false;
+            $con = 2;
         }
         else{
-            Article::create([
-                'name' => $name,
-                'price' => $price,
-                'description' => $description,
-                //placeholder, creator_id muss ja in login iwie gesetzt werden und kb darauf
-                'creator_id' => 1,
-                'createdate' => now()
-            ]);
+            try {
+                Article::create([
+                    'name' => $name,
+                    'price' => $price,
+                    'description' => $description,
+                    //placeholder, creator_id muss ja in login iwie gesetzt werden und kb darauf
+                    'creator_id' => 1,
+                    'createdate' => now()
+                ]);
+            }
+            //Falls es Probleme beim Einfügen in DB gab, zb. wenn für Name mehr als 80 Zeichen angegeben wurden
+            catch (\Exception $e){
+                $con = 3;
+            }
+
         }
         return view('newarticle', ['con' => $con]);
     }
