@@ -35,6 +35,7 @@
             background-color: #0056b3;
         }
     </style>
+    <script src="{{ asset('js/cookiecheck.js') }}"> </script>
 </head>
 <body>
 <script>
