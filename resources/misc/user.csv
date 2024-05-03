@@ -1,4 +1,4 @@
-id;ab_name;ab_password;ab_mail
+id;name;password;mail
 1;admin;admin;admin@abalo.example.com
 2;visitor;visitor;visitor@abalo.example.com
 3;visitor2;visitor2;visitor2@abalo.example.com

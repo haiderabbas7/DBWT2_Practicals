@@ -1,4 +1,4 @@
-id;ab_name;ab_price;ab_description;ab_creator_id;ab_createdate
+id;name;price;description;creator_id;createdate
 1;DeLorean DMC-12;30.000;"Wagen aus dem Film ""Zurück in die Zukunft"" zu verkaufen";5;19.12.20 13:00
 2;Lotus Esprit S1;25.500;"Wagen aus dem Film ""007 - Der Spion, der mich liebte""";6;20.12.20 14:00
 3;Toyota Supra;15.250;"Wagen aus dem Film ""The Fast and the Furious""";7;21.12.20 15:00
