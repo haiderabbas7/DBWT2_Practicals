@@ -16,10 +16,13 @@
     </style>
     <!-- JavaScripts -->
     <script src="{{ asset('js/cookiecheck.js') }}"> </script>
+    <script src="{{ asset('js/shoppingcart.js') }}"></script>
 </head>
 <body>
     <div id="cartDisplay">
-        <p>Warenkorb: <span id="cartCount">0</span> Artikel</p>
+        <h2>Warenkorb</h2>
+        <span id="cartCount">Anzahl Produkte: 0</span> <br>
+        Preis: 0€
     </div>
     <table>
         @foreach($articles_req as $article)
@@ -31,7 +34,8 @@
                 <td>{{$article->creator_id}}</td>
                 <td>{{$article->createdate}}</td>
                 <td><img src="{{asset($article->image_path)}}" alt="Article Image"></td>
-                <td><button class="addToCartButton" data-id="{{$article->id}}">+</button></td>
+
+                <td><button class="addToCartButton" data-id="{{$article->id}}" data-name="{{$article->name}}" data-price="{{$article->price}}">+</button></td>
             </tr>
       @endforeach
     </table>
