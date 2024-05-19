@@ -86,7 +86,7 @@
 
     document.body.appendChild(form);
 
-    document.getElementById('articleForm').addEventListener('submit', function(event) {
+    /*document.getElementById('articleForm').addEventListener('submit', function(event) {
         // verhindert die default ausführung von submit, damit man selber kontrolle hat
         event.preventDefault();
 
@@ -99,6 +99,25 @@
         else {
             this.submit();
         }
+    });*/
+    document.getElementById('button').addEventListener('click', event => {
+        event.preventDefault();
+        let name = nameInput.value;
+        let price = priceInput.value;
+
+        if (name === '' || isNaN(price) || price <= 0) {
+            alert('Bitte geben Sie gültige Werte ein.');
+        }
+        else {
+            let xhr = new XMLHttpRequest();
+            xhr.open('POST', '/articles');
+            let formData = new FormData();
+            formData.append("name", name);
+            formData.append("price", price);
+            xhr.send(formData);
+        }
+        //return false glaube ich unnötig, copilot sagt das ist damit events nicht weitergereicht werden
+        return false;
     });
 </script>
 </body>

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1 id="p"></h1>
+<script>
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', "/static/message.json");
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4) {
+            if (xhr.status === 200) {
+                var responseObj = JSON.parse(xhr.responseText);
+                document.getElementById('p').innerHTML = responseObj.message;
+            } else {
+                console.error(xhr.statusText);
+            }
+        }
+    };
+    xhr.send();
+</script>
+</body>
+</html>

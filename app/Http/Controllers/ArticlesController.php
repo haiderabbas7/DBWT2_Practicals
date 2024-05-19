@@ -81,6 +81,15 @@ class ArticlesController
             }
 
         }
+        /**
+         * Hier soll kein HTML returned werden, sondern ne "Textnachricht"
+         * Diese Nachricht soll das $con ersetzen, also "Erfolgreich" oder "Fehler:..." yky
+         * Hab textnachricht jz mal als JSON Objekt interpretiert? null ahnung
+         * dann vllt redirect() auf die newarticles view
+         * unter dem Formular soll textnachricht angezeigt werden => also nicht mehr mit alert()
+         * dazu view anpassen, der soll dann das JSON objekt mit innerHTML auf ein neues p Objekt unter dem Formular legen
+         */
+
         return view('newarticle', ['con' => $con]);
     }
 }
