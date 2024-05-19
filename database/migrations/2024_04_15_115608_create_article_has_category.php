@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -28,10 +29,14 @@ return new class extends Migration
                 ->on("article")
                 ->references("id");
 
-
             //Kombination aus articlecategory_id und article_id sind unique
             $table->unique(["articlecategory_id","article_id"]);
         });
+
+        //zum updaten der ID sequenz
+        $maxId = DB::table('article_has_category')->max('id') ?? 0;
+        DB::statement("ALTER SEQUENCE article_has_category_id_seq RESTART WITH " . ($maxId + 1));
+        DB::statement("SELECT setval('article_has_category_id_seq', (SELECT MAX(id) FROM article_has_category))");
     }
 
     /**

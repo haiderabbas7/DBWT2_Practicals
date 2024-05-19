@@ -27,6 +27,10 @@ return new class extends Migration
                 ->comment("E-Mail-Adresse");
         });
 
+        //zum updaten der ID sequenz
+        $maxId = DB::table('benutzer')->max('id') ?? 0;
+        DB::statement("ALTER SEQUENCE benutzer_id_seq RESTART WITH " . ($maxId + 1));
+        DB::statement("SELECT setval('benutzer_id_seq', (SELECT MAX(id) FROM benutzer))");
     }
 
     /**

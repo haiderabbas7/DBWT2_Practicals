@@ -14,11 +14,10 @@ INSERT INTO testdata (id,testname) VALUES
                                              (1,'Fotokamera'),(2,'Blitzlicht');
 
 DELETE FROM article WHERE id > 30;
-DELETE FROM user;
 
-DROP TABLE article_has_articlecategory;
-DROP TABLE article;
+DROP TABLE article_has_category;
 DROP TABLE articlecategory;
+DROP TABLE article;
 DROP TABLE benutzer;
 
 DROP TABLE migrations;

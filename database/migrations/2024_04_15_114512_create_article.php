@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -38,6 +39,11 @@ return new class extends Migration
                 ->nullable(false)
                 ->comment("Zeitpunkt der Erstellung des Artikels");
         });
+
+        //zum updaten der ID sequenz
+        $maxId = DB::table('article')->max('id') ?? 0;
+        DB::statement("ALTER SEQUENCE article_id_seq RESTART WITH " . ($maxId + 1));
+        DB::statement("SELECT setval('article_id_seq', (SELECT MAX(id) FROM article))");
     }
 
     /**
