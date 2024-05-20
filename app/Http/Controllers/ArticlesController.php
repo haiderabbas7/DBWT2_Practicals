@@ -60,9 +60,11 @@ class ArticlesController
         $name = $request->input('name');
         $price = $request->input('price');
         $description = $request->input('description');
-        $con = 1;
+        $status = '';
+        $message = '';
         if($name === "" || !is_numeric($price) || $price <= 0){
-            $con = 2;
+            $status = 'Fehler';
+            $message = '<b>FEHLER</b>: Bitte geben Sie gültige Werte ein: Kein leerer Name und nur positive Werte für Preis';
         }
         else{
             try {
@@ -70,26 +72,20 @@ class ArticlesController
                     'name' => $name,
                     'price' => $price,
                     'description' => $description,
-                    //placeholder, creator_id muss ja in login iwie gesetzt werden und kb darauf
                     'creator_id' => 1,
                     'createdate' => now()
                 ]);
+                $status = 'Erfolg';
+                $message = '<b>ERFOLG</b>: Artikel erfolgreich hinzugefügt';
             }
-            //Falls es Probleme beim Einfügen in DB gab, zb. wenn für Name mehr als 80 Zeichen angegeben wurden
-            catch (\Exception $e){
-                $con = 3;
+            catch (\Exception){
+                $status = 'Fehler';
+                $message = '<b>FEHLER</b>: Fehler beim Einfügen in Datenbank, bitte gültige Werte eingeben';
             }
-
         }
-        /**
-         * Hier soll kein HTML returned werden, sondern ne "Textnachricht"
-         * Diese Nachricht soll das $con ersetzen, also "Erfolgreich" oder "Fehler:..." yky
-         * Hab textnachricht jz mal als JSON Objekt interpretiert? null ahnung
-         * dann vllt redirect() auf die newarticles view
-         * unter dem Formular soll textnachricht angezeigt werden => also nicht mehr mit alert()
-         * dazu view anpassen, der soll dann das JSON objekt mit innerHTML auf ein neues p Objekt unter dem Formular legen
-         */
-
-        return view('newarticle', ['con' => $con]);
+        return response()->json([
+            'status' => $status,
+            'message' => $message
+        ]);
     }
 }

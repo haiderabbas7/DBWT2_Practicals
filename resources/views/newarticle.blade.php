@@ -6,9 +6,12 @@
     <title>Abalo</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: Calibri, serif;
         }
         #articleForm {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
             width: 100%;
             max-width: 600px;
             margin: 0 auto;
@@ -34,22 +37,20 @@
         #articleForm button:hover {
             background-color: #0056b3;
         }
+        #statusText {
+            text-align: center;
+            background-color: #f8f8f8;
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 10px;
+        }
+
     </style>
     <script src="{{ asset('js/cookiecheck.js') }}"> </script>
 </head>
 <body>
 <script>
     "use strict";
-
-    let con = @json($con);
-    if(con === 2){
-        alert('Bitte geben Sie gültige Werte ein: Kein leerer Name und nur positive Werte für Preis.');
-        con = 1;
-    }
-    else if(con === 3){
-        alert('Fehler beim Einfügen in Datenbank, bitte gültige Werte eingeben.');
-        con = 1;
-    }
 
     let form = document.createElement('form');
     form.setAttribute('method', 'post');
@@ -81,42 +82,48 @@
     form.appendChild(descInput);
 
     let saveButton = document.createElement('button');
+    saveButton.setAttribute('id', 'button');
     saveButton.textContent = 'Speichern';
     form.appendChild(saveButton);
 
     document.body.appendChild(form);
 
-    /*document.getElementById('articleForm').addEventListener('submit', function(event) {
-        // verhindert die default ausführung von submit, damit man selber kontrolle hat
-        event.preventDefault();
+    let statusText = document.createElement('p');
+    statusText.setAttribute('id', 'statusText');
+    form.appendChild(statusText);
 
-        let name = nameInput.value;
-        let price = priceInput.value;
-
-        if (name === '' || isNaN(price) || price <= 0) {
-            alert('Bitte geben Sie gültige Werte ein.');
-        }
-        else {
-            this.submit();
-        }
-    });*/
     document.getElementById('button').addEventListener('click', event => {
         event.preventDefault();
         let name = nameInput.value;
         let price = priceInput.value;
+        let description = descInput.value;
+        let statusText = document.getElementById('statusText');
 
         if (name === '' || isNaN(price) || price <= 0) {
-            alert('Bitte geben Sie gültige Werte ein.');
+            statusText.innerHTML = '<b>FEHLER</b>: Bitte geben Sie gültige Werte ein: Kein leerer Name und nur positive Werte für Preis';
+            statusText.style.color = 'red';
         }
         else {
             let xhr = new XMLHttpRequest();
             xhr.open('POST', '/articles');
+            xhr.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
+
+            xhr.onload = function() {
+                var response = JSON.parse(xhr.responseText);
+                if (response.status === 'Erfolg') {
+                    statusText.style.color = 'green';
+                } else if (response.status === 'Fehler') {
+                    statusText.style.color = 'red';
+                }
+                statusText.innerHTML = response.message;
+            };
+
             let formData = new FormData();
             formData.append("name", name);
             formData.append("price", price);
+            formData.append("description", description);
             xhr.send(formData);
         }
-        //return false glaube ich unnötig, copilot sagt das ist damit events nicht weitergereicht werden
         return false;
     });
 </script>
