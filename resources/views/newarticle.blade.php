@@ -105,9 +105,8 @@
         }
         else {
             let xhr = new XMLHttpRequest();
-            xhr.open('POST', '/articles');
+            xhr.open('POST', '/api/articles');
             xhr.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
-
             xhr.onload = function() {
                 var response = JSON.parse(xhr.responseText);
                 if (response.status === 'Erfolg') {

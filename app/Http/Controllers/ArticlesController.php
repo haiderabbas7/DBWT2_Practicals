@@ -56,12 +56,13 @@ class ArticlesController
     }
 
 
-    public function createNewArticle(Request $request){
+    public function createNewArticle_api(Request $request){
         $name = $request->input('name');
         $price = $request->input('price');
         $description = $request->input('description');
         $status = '';
         $message = '';
+        $id = null;
         if($name === "" || !is_numeric($price) || $price <= 0){
             $status = 'Fehler';
             $message = '<b>FEHLER</b>: Bitte geben Sie gültige Werte ein: Kein leerer Name und nur positive Werte für Preis';
@@ -77,6 +78,13 @@ class ArticlesController
                 ]);
                 $status = 'Erfolg';
                 $message = '<b>ERFOLG</b>: Artikel erfolgreich hinzugefügt';
+                //holt sich die ID des zuletzt erstellten artikel, wo name, preis und description übereinstimmen
+                $id = Article::where('name', $name)
+                    ->where('price', $price)
+                    ->where('description', $description)
+                    ->orderBy('createdate', 'desc')
+                    ->first()
+                    ->id;
             }
             catch (\Exception){
                 $status = 'Fehler';
@@ -85,7 +93,8 @@ class ArticlesController
         }
         return response()->json([
             'status' => $status,
-            'message' => $message
+            'message' => $message,
+            'id' => $id
         ]);
     }
 }
