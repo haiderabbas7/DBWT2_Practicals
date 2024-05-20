@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class Article extends Model
 {
@@ -20,5 +21,17 @@ class Article extends Model
     public $creator_id = 'creator_id';
     public $createdate = 'createdate';
 
-    protected $fillable = ['name', 'price', 'description', 'creator_id', 'createdate']; // The attributes that are mass assignable
+    protected $fillable = ['name', 'price', 'description', 'creator_id', 'createdate'];
+
+    //real talk, den code hab ich von copilot. das ist, damit es keine lücken in den AUTOINCREMENT IDs mehr gibt
+    protected static function boot()
+    {
+        parent::boot();
+        static::creating(function ($article) {
+            if (empty($article->id)) {
+                $maxId = DB::table('article')->max('id');
+                $article->id = $maxId + 1;
+            }
+        });
+    }
 }

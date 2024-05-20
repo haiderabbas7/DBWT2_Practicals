@@ -9,43 +9,37 @@
     <nav>
         <script>
             "use strict";
-            let outerlist = document.createElement("ul");
-            outerlist.setAttribute('id', 'outerlist');
-            document.body.append(outerlist);
 
+            let kategorien = JSON.parse('@json($kategorien)');
+            let kategorienNamen = kategorien.map(kategorie => kategorie.name);
 
-            let menuItems = ['Home', 'Kategorien', 'Verkaufen', 'Unternehmen'];
-            for(let i = 0; i < menuItems.length; i++){
-                let item = document.createElement('li');
-                item.setAttribute('id', menuItems[i]);
-                item.textContent = menuItems[i];
-                document.getElementById('outerlist').append(item);
+            let menu = {
+                "Home": [],
+                "Kategorien": kategorienNamen,
+                "Verkaufen": [],
+                "Unternehmen": ["Philosophie", "Karriere"]
+            };
+
+            const nav = document.createElement("nav");
+            const outerList = document.createElement("ul");
+            nav.appendChild(outerList);
+            //mit entries bekommt man ein array der key-value paare
+            for (const [key, values] of Object.entries(menu)) {
+                const item = document.createElement('li');
+                item.textContent = key;
+                outerList.appendChild(item);
+                if (values) {
+                    const innerList = document.createElement('ul');
+                    item.appendChild(innerList);
+                    for (const value of values) {
+                        const innerItem = document.createElement('li');
+                        innerItem.textContent = value;
+                        innerList.appendChild(innerItem);
+                    }
+                }
             }
 
-
-            let innerlistUnternehmen = document.createElement('ul');
-            innerlistUnternehmen.setAttribute('id', 'innerlistUnternehmen');
-            document.getElementById('Unternehmen').append(innerlistUnternehmen);
-            let innerMenuItems = ['Philosophie', 'Karriere'];
-            for(let i = 0; i < innerMenuItems.length; i++){
-                let item = document.createElement('li');
-                item.setAttribute('id', menuItems[i]);
-                item.textContent = innerMenuItems[i];
-                document.getElementById('innerlistUnternehmen').append(item);
-            }
-
-
-            let innerlistKategorien = document.createElement('ul');
-            innerlistKategorien.setAttribute('id', 'innerlistKategorien');
-            document.getElementById('Kategorien').append(innerlistKategorien);
-            let kategorien = @json($kategorien);
-            for(let kategorie of kategorien){
-                let item = document.createElement('li');
-                item.setAttribute('id', kategorie.name);
-                item.textContent = kategorie.name;
-                document.getElementById('innerlistKategorien').append(item);
-            }
-
+            document.body.prepend(nav);
         </script>
     </nav>
 </body>
