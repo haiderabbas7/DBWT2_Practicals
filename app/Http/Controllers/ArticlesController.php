@@ -83,4 +83,10 @@ class ArticlesController
         }
         return view('newarticle', ['con' => $con]);
     }
+    public function search(Request $request)
+    {
+        $search = $request->get('search');
+        $articles = Article::where('name', 'like', '%' . $search . '%')->get();
+        return response()->json($articles);
+    }
 }
