@@ -12,20 +12,61 @@ window.onload = function() {
             this.disabled = true;
         });
     }
+
+    // Abrufen der shoppingcart_id aus der Sitzung
+    let shoppingCartId = sessionStorage.getItem('shopping_cart_id');
+
+    fetch(`/api/shoppingcart/${shoppingCartId}`)
+        .then(response => response.json())
+        .then(data => {
+            cart = data;
+            updateCartDisplay();
+        });
 }
+/**
+ * Adds an article to the shopping cart
+ *
+ * @param articleId The ID of the article
+ * @param articleName The name of the article
+ * @param articlePrice The price of the article
+ */
 function addToCart(articleId, articleName, articlePrice) {
     // Überprüfen, ob der Artikel bereits im Warenkorb ist
     if (!cart.some(article => article.id === articleId)) {
         cart.push({id: articleId, name: articleName, price: articlePrice});
+        fetch('/api/shoppingcart', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ articleid: articleId }),
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Success:', data);
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
         updateCartDisplay();
     }
 }
+
+/**
+ * Removes an article from the shopping cart
+ *
+ * @param articleId The ID of the article
+ */
 function removeFromCart(articleId) {
     cart = cart.filter(article => article.id !== articleId);
     updateCartDisplay();
     document.querySelector(`.addToCartButton[data-id="${articleId}"]`).disabled = false; // Aktiviert den "Hinzufügen"-Button
 }
 
+/**
+ * Updates the shopping cart display
+ *
+ */
 function updateCartDisplay() {
     let cartDisplay = document.getElementById('cartDisplay');
     let tableHtml = '<table>';
@@ -53,6 +94,11 @@ function updateCartDisplay() {
     });
 }
 
+/**
+ * Returns the sum of the prices of all articles in the shopping cart
+ *
+ * @returns The sum of the prices
+ */
 function sumPrices() {
     let sum = 0;
     for (let i = 0; i < cart.length; i++) {
