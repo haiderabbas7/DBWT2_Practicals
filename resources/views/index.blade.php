@@ -23,6 +23,7 @@
             const nav = document.createElement("nav");
             const outerList = document.createElement("ul");
             nav.appendChild(outerList);
+
             //mit entries bekommt man ein array der key-value paare
             for (const [key, values] of Object.entries(menu)) {
                 const item = document.createElement('li');

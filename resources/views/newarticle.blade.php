@@ -88,6 +88,7 @@
 
     document.body.appendChild(form);
 
+    //status-text gibt den status der anfrage aus
     let statusText = document.createElement('p');
     statusText.setAttribute('id', 'statusText');
     form.appendChild(statusText);
@@ -107,6 +108,7 @@
             let xhr = new XMLHttpRequest();
             xhr.open('POST', '/api/articles');
             xhr.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
+            //onload ist basically wie status=4 in Aufg.1, also wenn daten vom server ankommen
             xhr.onload = function() {
                 var response = JSON.parse(xhr.responseText);
                 if (response.status === 'Erfolg') {
