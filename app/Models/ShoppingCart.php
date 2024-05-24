@@ -14,6 +14,7 @@ class ShoppingCart extends Model {
     public $incrementing = true;
 
     public $user_id = 'user_id';
+    public $createdate = 'createdate';
 
-    protected $fillable = ['user_id'];
+    protected $fillable = ['user_id', 'createdate'];
 }

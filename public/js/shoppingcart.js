@@ -16,6 +16,11 @@ window.onload = function() {
     // Abrufen der shoppingcart_id aus der Sitzung
     let shoppingCartId = sessionStorage.getItem('shopping_cart_id');
 
+    /**
+     *     Hier wird die GET route mit shoppingCartId aufgerufen,
+     *     aber die Controller methode will ne userid
+     *     ist das kein problem?
+     */
     fetch(`/api/shoppingcart/${shoppingCartId}`)
         .then(response => response.json())
         .then(data => {

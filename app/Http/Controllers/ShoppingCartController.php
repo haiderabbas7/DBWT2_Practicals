@@ -21,9 +21,15 @@ class ShoppingCartController {
             $userId = $request->input('userid');
 
             // Abrufen der shoppingcart_id aus der Datenbank
-            $shoppingCart = ShoppingCart::where('creator_id', $userId)->first();
-            $shoppingCartId = $shoppingCart->id;
+            $shoppingCartId = ShoppingCart::where('creator_id', $userId)
+                ->first()
+                ->id;
 
+            /***
+             * hier lieber nicht mit save() und so arbeiten, hat bei mir NIE funktioniert und nur probleme gemacht
+             * mach lieber mit create()
+             * guck unter ArticlesController methode createNewArticle_api wie ich das benutzt habe
+             */
             $shoppingCartItem = new ShoppingCartItem();
             $shoppingCartItem->shoppingcart_id = $shoppingCartId;
             $shoppingCartItem->article_id = $articleId;
