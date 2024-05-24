@@ -9,64 +9,45 @@ use Illuminate\Support\Facades\Storage;
 use App\Models\ShoppingCartItem;
 
 class ShoppingCartController {
-    /**
-     * Adds an article to the shopping cart
-     *
-     * @param Request $request The request containing the article id and the user id
-     * @return \Illuminate\Http\JsonResponse The shopping cart item that was added
-     */
     public function addArticle_api(Request $request) {
-        if($request->input('articleid') && $request->input('userid')) {
-            $articleId = $request->input('articleid');
-            $userId = $request->input('userid');
+        if($request->input('article_id')) {
+            $articleId = $request->input('article_id');
 
             // Abrufen der shoppingcart_id aus der Datenbank
-            $shoppingCartId = ShoppingCart::where('creator_id', $userId)
+            $shoppingCartId = ShoppingCart::where('creator_id', 1)
                 ->first()
                 ->id;
 
-            /***
-             * hier lieber nicht mit save() und so arbeiten, hat bei mir NIE funktioniert und nur probleme gemacht
-             * mach lieber mit create()
-             * guck unter ArticlesController methode createNewArticle_api wie ich das benutzt habe
-             */
-            $shoppingCartItem = new ShoppingCartItem();
-            $shoppingCartItem->shoppingcart_id = $shoppingCartId;
-            $shoppingCartItem->article_id = $articleId;
-            $shoppingCartItem->createdate = date('Y-m-d H:i:s');
-
-            $shoppingCartItem->save();
-
-            return response()->json($shoppingCartItem);
+            try{
+                ShoppingCartItem::create([
+                    'shoppingcart_id' => $shoppingCartId,
+                    'article_id' => $articleId,
+                    'createdate' => now()
+                ]);
+                return response()->json('Erfolg');
+            }
+            catch(\Exception){
+                return response()->json('Fehler');
+            }
         } else {
-            return response()->json(['message' => 'Article ID and User ID are required'], 400);
+            return response()->json('Fehler: keine article_id angegeben');
         }
     }
 
-    /**
-     * Removes an article from the shopping cart
-     *
-     * @param $shoppingcartid The ID of the shopping cart
-     * @param $articleId The ID of the article to remove
-     * @return \Illuminate\Http\JsonResponse The response
-     */
-    public function removeArticle_api($shoppingcartid, $articleId) {
-        // Finden Sie das ShoppingCartItem, das die gegebene articleId und shoppingcartid hat
-        $shoppingCartItem = ShoppingCartItem::where('article_id', $articleId)
-            ->where('shoppingcart_id', $shoppingcartid)
+    public function removeArticle_api($shoppingcart_id, $article_id) {
+        $shoppingCartItem = ShoppingCartItem::where('article_id', $article_id)
+            ->where('shoppingcart_id', $shoppingcart_id)
+            ->orderBy('createdate', 'desc')
             ->first();
 
-        // Überprüfen Sie, ob das ShoppingCartItem gefunden wurde
         if ($shoppingCartItem) {
-            // Löschen Sie das ShoppingCartItem
             $shoppingCartItem->delete();
-
-            // Geben Sie eine Antwort zurück
-            return response()->json(['message' => 'Artikel erfolgreich aus dem Warenkorb entfernt']);
-        } else {
-            // Geben Sie eine Fehlermeldung zurück, wenn das ShoppingCartItem nicht gefunden wurde
-            return response()->json(['message' => 'Artikel nicht im Warenkorb gefunden'], 404);
+            return response()->json('Erfolg');
         }
+        else{
+            return response()->json('Fehler');
+        }
+
     }
 
     /**
@@ -75,28 +56,17 @@ class ShoppingCartController {
      * @param $userId The ID of the user
      * @return \Illuminate\Http\JsonResponse The shopping cart items
      */
-    public function getCart_api($userId) {
-        if($userId) {
-            // Abrufen der shoppingcart_id aus der Datenbank
-            $shoppingCart = ShoppingCart::where('creator_id', $userId)->first();
-            $shoppingCartId = $shoppingCart->id;
-
-            $shoppingCartItems = ShoppingCartItem::where('shoppingcart_id', $shoppingCartId)->get();
+    public function getCart_api($shoppingcart_id) {
+        try{
+            $shoppingCartItems = DB::table('article')
+                ->join('shoppingcart_item', 'article.id', '=', 'shoppingcart_item.article_id')
+                ->where('shoppingcart_item.shoppingcart_id', $shoppingcart_id)
+                ->select('article.*', 'shoppingcart_item.*')
+                ->get();
             return response()->json($shoppingCartItems);
-        } else {
-            return response()->json(['message' => 'User ID is required'], 400);
         }
-    }
-
-    /**
-     * Searches for articles based on the given search term
-     *
-     * @param Request $request The request containing the search term
-     * @return \Illuminate\Http\JsonResponse The articles that match the search term
-     */
-    public function search_api(Request $request) {
-        $search = $request->get('search');
-        $articles = Article::where('name', 'like', '%' . $search . '%')->get();
-        return response()->json($articles);
+        catch(\Exception){
+            return response()->json(['message' => 'Fehler'], 500);
+        }
     }
 }

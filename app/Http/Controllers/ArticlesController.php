@@ -13,7 +13,7 @@ class ArticlesController
      * Displays the articles requested. When nothing fitting the requirements is requested, shows all existing articles in the database.
      *
      * @param Request $request The request for the to be shown articles
-     * @return void
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Foundation\Application
      */
     public function articles(Request $request) {
         // Get the search term from the URL
@@ -28,7 +28,11 @@ class ArticlesController
         foreach ($articles_req as $article) {
             $article->image_path = $this->getArticleImagePath($article->id);
         }
-        return view('articles', ['articles_req' => $articles_req]);
+
+        //hier placeholder evtl rausmachen
+        $shoppingcart_id = "1";
+
+        return view('articles', ['articles_req' => $articles_req, 'shoppingcart_id' => $shoppingcart_id]);
     }
 
     /**
@@ -98,4 +102,15 @@ class ArticlesController
         ]);
     }
 
+    /**
+     * Searches for articles based on the given search term
+     *
+     * @param Request $request The request containing the search term
+     * @return \Illuminate\Http\JsonResponse The articles that match the search term
+     */
+    public function search_api(Request $request) {
+        $search = $request->get('search');
+        $articles = Article::where('name', 'like', '%' . $search . '%')->get();
+        return response()->json($articles);
+    }
 }

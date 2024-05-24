@@ -23,3 +23,14 @@ DROP TABLE benutzer;
 DROP TABLE migrations;
 
 SELECT setval('article_id_seq', (SELECT MAX(id) FROM article));
+
+INSERT INTO shoppingcart (id, creator_id, createdate)
+VALUES
+    (1, 1, now())
+
+//shoppingcart_id
+
+SELECT * FROM article
+    JOIN shoppingcart_item
+        ON article.id = shoppingcart_item.article_id
+    WHERE shoppingcart_id = 1
