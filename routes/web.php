@@ -19,6 +19,6 @@ Route::get('/logout', [App\Http\Controllers\AuthController::class, 'logout'])->n
 Route::get('/isloggedin', [App\Http\Controllers\AuthController::class, 'isloggedin'])->name('haslogin');
 
 Route::get('/articles', [App\Http\Controllers\ArticlesController::class, 'articles'])->name('articles');
-Route::post('/articles', [\App\Http\Controllers\ArticlesController::class, 'createNewArticle'])->name('addnewarticle');
+//Route::post('/articles', [\App\Http\Controllers\ArticlesController::class, 'createNewArticle'])->name('addnewarticle');
 
 Route::get('/newarticle',[\App\Http\Controllers\ArticlesController::class, 'getNewArticleInfo'])->name('newarticle');

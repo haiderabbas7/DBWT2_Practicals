@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1 id="p"></h1>
+<script>
+    function fetchMessage() {
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', "/static/message.json");
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4) {
+                if (xhr.status === 200) {
+                    var responseObj = JSON.parse(xhr.responseText);
+                    document.getElementById('p').innerHTML = responseObj.message;
+                } else {
+                    console.error(xhr.statusText);
+                }
+            }
+        };
+        xhr.send();
+    }
+    fetchMessage()
+    // über JS setInterval wird fetchMessage alle 3 Sekunden aufgerufen
+    setInterval(fetchMessage, 3000);
+</script>
+</body>
+</html>

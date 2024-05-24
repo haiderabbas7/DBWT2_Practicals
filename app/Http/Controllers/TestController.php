@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Article;
-use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -40,14 +39,25 @@ class TestController
         }
         fclose($handle);*/
 
-        $artikel = Article::create([
+        /*$artikel = Article::create([
             'name' => 'London to Paris',
             'price' => 123,
             'description' => "abc",
             'creator_id' => 1,
             'createdate' => now()
-        ]);
+        ]);*/
+        $name = 1;
+        $price = 1;
+        $description = 1;
 
-        return response()->json();
+        $id = Article::where('name', $name)
+            ->where('price', $price)
+            ->where('description', $description)
+            ->orderBy('createdate', 'desc')
+            ->first()
+            ->id;
+        //$id = $latestArticle->id;
+
+        return response()->json($id);
     }
 }
