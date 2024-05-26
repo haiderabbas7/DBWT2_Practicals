@@ -68,7 +68,6 @@ function removeFromCart(articleId) {
     xhr.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
     xhr.onload = function() {
         updateCartDisplay();
-        //window.location.reload();
     };
     xhr.send();
 }
@@ -84,7 +83,7 @@ function updateCartDisplay() {
         tableHtml += `<tr>
             <td>${article.name}</td>
             <td>${article.price}</td>
-            <td><button class="removeFromCartButton" data-id="${article.article_id}">-</button></td>
+            <td><button class="removeFromCartButton" data-id="${article.id}">-</button></td>
         </tr>`;
     });
 
