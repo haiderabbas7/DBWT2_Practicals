@@ -20,10 +20,9 @@ window.onload = function() {
     xhr.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
     xhr.onload = function() {
         cart = JSON.parse(xhr.responseText);
-
         updateCartDisplay();
         cart.forEach(article =>{
-            let button = document.querySelector(`.addToCartButton[data-id="${article.id}"]`);
+            let button = document.querySelector(`.addToCartButton[data-id="${article.article_id}"]`);
             button.disabled = true;
         });
     }
@@ -85,7 +84,7 @@ function updateCartDisplay() {
         tableHtml += `<tr>
             <td>${article.name}</td>
             <td>${article.price}</td>
-            <td><button class="removeFromCartButton" data-id="${article.id}">-</button></td>
+            <td><button class="removeFromCartButton" data-id="${article.article_id}">-</button></td>
         </tr>`;
     });
 
