@@ -84,7 +84,7 @@ function updateCartDisplay() {
         tableHtml += `<tr>
             <td>${article.name}</td>
             <td>${article.price}</td>
-            <td><button class="removeFromCartButton" data-id="${article.id}">-</button></td>
+            <td><button class="removeFromCartButton" data-id="${article.article_id}">-</button></td>
         </tr>`;
     });
 
