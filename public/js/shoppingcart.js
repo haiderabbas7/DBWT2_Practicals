@@ -20,10 +20,9 @@ window.onload = function() {
     xhr.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
     xhr.onload = function() {
         cart = JSON.parse(xhr.responseText);
-
         updateCartDisplay();
         cart.forEach(article =>{
-            let button = document.querySelector(`.addToCartButton[data-id="${article.id}"]`);
+            let button = document.querySelector(`.addToCartButton[data-id="${article.article_id}"]`);
             button.disabled = true;
         });
     }
@@ -69,7 +68,7 @@ function removeFromCart(articleId) {
     xhr.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
     xhr.onload = function() {
         updateCartDisplay();
-        window.location.reload();
+        //window.location.reload();
     };
     xhr.send();
 }
