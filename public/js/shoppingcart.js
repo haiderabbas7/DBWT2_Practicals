@@ -43,7 +43,6 @@ function addToCart(articleId, articleName, articlePrice) {
     xhr.open('POST', '/api/shoppingcart');
     xhr.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
 
-
     xhr.onload = function() {
         updateCartDisplay();
     };

@@ -10,7 +10,7 @@
         <script>
             "use strict";
 
-            let kategorien = JSON.parse('@json($kategorien)');
+            let kategorien = JSON.parse('@json(   $kategorien)');
             let kategorienNamen = kategorien.map(kategorie => kategorie.name);
 
             let menu = {
