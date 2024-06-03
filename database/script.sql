@@ -26,9 +26,9 @@ SELECT setval('article_id_seq', (SELECT MAX(id) FROM article));
 
 INSERT INTO shoppingcart (id, creator_id, createdate)
 VALUES
-    (1, 1, now())
+    (1, 1, now());
 
-//shoppingcart_id
+
 
 SELECT * FROM article
     JOIN shoppingcart_item
