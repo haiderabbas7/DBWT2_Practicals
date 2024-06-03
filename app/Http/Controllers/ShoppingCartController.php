@@ -5,6 +5,7 @@ use App\Models\Article;
 use App\Models\ShoppingCart;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use App\Models\ShoppingCartItem;
 
@@ -12,6 +13,8 @@ class ShoppingCartController {
     public function addArticle_api(Request $request) {
         if($request->input('article_id')) {
             $articleId = $request->input('article_id');
+
+
 
             // Abrufen der shoppingcart_id aus der Datenbank
             $shoppingCartId = ShoppingCart::where('creator_id', 1)
@@ -65,7 +68,8 @@ class ShoppingCartController {
                 ->get();
             return response()->json($shoppingCartItems);
         }
-        catch(\Exception){
+        catch(\Exception $e){
+            Log::info($e->getMessage());
             return response()->json(['message' => 'Fehler'], 500);
         }
     }

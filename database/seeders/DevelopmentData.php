@@ -19,7 +19,7 @@ class DevelopmentData extends Seeder
      */
     public function run(): void
     {
-        $this->seed_benutzer();
+        //$this->seed_benutzer();
         $this->seed_articles();
         $this->seed_articlecategories();
         //WENN ES PROBLEME MIT DEN SEQUENZEN GIBT, SCHREIB MIR EINE METHODE ZUM MANUELLEN UPDATEN DER SEQUENZEN

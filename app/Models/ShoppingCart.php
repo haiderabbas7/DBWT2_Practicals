@@ -17,7 +17,7 @@ class ShoppingCart extends Model {
     public $user_id = 'user_id';
     public $createdate = 'createdate';
 
-    protected $fillable = ['user_id', 'createdate'];
+    protected $fillable = ['creator_id', 'createdate'];
 
     //real talk, den code hab ich von copilot. das ist, damit es keine lücken in den AUTOINCREMENT IDs mehr gibt
     protected static function boot()
