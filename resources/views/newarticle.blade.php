@@ -46,9 +46,10 @@
         }
 
     </style>
-    <script src="{{ asset('js/cookiecheck.js') }}"> </script>
+
 </head>
 <body>
+@vite('resources/js/app.js')
 <script>
     "use strict";
 

@@ -18,13 +18,12 @@
 
 </head>
 <body>
+    @vite('resources/js/app.js')
     <script>
         "use strict";
         //holt sich die shopping_cart_id, welche der articles view übergeben wurde
         var shoppingcart_id = JSON.parse('@json($shoppingcart_id)');
     </script>
-    <script src="{{ asset('js/cookiecheck.js') }}"> </script>
-    <script src="{{ asset('js/shoppingcart.js') }}"></script>
     <div id="cartDisplay">
         <h2>Warenkorb</h2>
         <span id="cartCount">Anzahl Produkte: 0</span> <br>

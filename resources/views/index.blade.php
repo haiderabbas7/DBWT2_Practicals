@@ -3,9 +3,10 @@
 <head>
     <meta charset="utf-8">
     <title>Abalo</title>
-    <script src="{{ asset('js/cookiecheck.js') }}"> </script>
+
 </head>
 <body>
+    @vite('resources/js/app.js')
     <nav>
         <script>
             "use strict";
