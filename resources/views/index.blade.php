@@ -43,9 +43,7 @@
 
             document.body.prepend(nav);
         </script>
-        @verbatim
-            {{ msg }}
-        @endverbatim
+
     </nav>
 </body>
 </html>

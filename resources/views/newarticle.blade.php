@@ -44,11 +44,9 @@
             border-radius: 4px;
             margin-top: 10px;
         }
-
     </style>
-
 </head>
-<body>
+<body id="app">
 @vite('resources/js/app.js')
 <script>
     "use strict";

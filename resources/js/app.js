@@ -6,6 +6,18 @@ import './shoppingcart.js'
 import { createApp } from 'vue';
 const vm = createApp({
     data() {
-        return { msg: 'a!' }
+        return {
+            msg: 'aaa!',
+            newArticle_csrfToken: "",
+            newArticle_name: "",
+            newArticle_price: "",
+            newArticle_description: "",
+            newArticle_status: ""
+        }
+    },
+    methods: {
+        sendNewArticleInfo: function (){
+
+        }
     }
 }).mount('#app');
