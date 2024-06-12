@@ -111,7 +111,7 @@ function updateCartDisplay() {
  */
 function sumPrices() {
     let prices = cart.map(article => parseFloat(article.price));
-    return math.sum(prices);
+    return  prices.length ? math.sum(prices) : 0;
 }
 
 /**

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:bind="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Vue Array</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+</head>
+<body>
+    <div id="app">
+        <div v-for="object in objects">
+            <div v-for="(name, price) in object">
+                {{name, price}}
+            </div>
+        </div>
+    </div>
+    <script>
+        let app = Vue.createApp( {
+           data() {
+               return  {
+                objects: [
+                    {name: "Reifen", price: 8290},
+                    {name: "Antenne drehbar. Leicht geknickt", price: 1400},
+                    {name: "Opel Kadett C 1992 - wie neu", price: 150000}
+               ]
+               }
+           }
+        }).mount('#app');
+    </script>
+</body>
+</html>
