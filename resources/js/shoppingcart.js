@@ -23,7 +23,7 @@ window.onload = function() {
         cart = JSON.parse(xhr.responseText);
         updateCartDisplay();
         cart.forEach(article =>{
-            let button = document.querySelector(`.addToCartButton[data-id="${article.article_id}"]`);
+            let button = document.querySelector(`.addToCartButton[data-id="${article.id}"]`);
             button.disabled = true;
         });
     }
@@ -121,5 +121,5 @@ function sumPrices() {
  */
 function averagePrice() {
     let prices = cart.map(article => parseFloat(article.price));
-    return math.mean(prices);
+    return prices.length ? math.mean(prices) : 0;
 }
