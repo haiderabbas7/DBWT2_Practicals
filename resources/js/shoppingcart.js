@@ -1,4 +1,5 @@
 "use strict";
+import * as math from 'mathjs';
 
 let cart = [];
 
@@ -90,6 +91,7 @@ function updateCartDisplay() {
     cartDisplay.innerHTML = '<h2>Warenkorb</h2>' +
         'Anzahl Produkte: ' + cart.length +
         '<br>' + ' Preis: ' + sumPrices() + '€' +
+        '<br>' + ' Durchschnittspreis: ' + averagePrice() + '€' +
             '<br>' + tableHtml;
 
     // Event Listener für die "removeFromCartButton" hinzufügen
@@ -108,9 +110,16 @@ function updateCartDisplay() {
  * @returns The sum of the prices
  */
 function sumPrices() {
-    let sum = 0;
-    for (let i = 0; i < cart.length; i++) {
-        sum += parseFloat(cart[i].price);
-    }
-    return sum;
+    let prices = cart.map(article => parseFloat(article.price));
+    return math.sum(prices);
+}
+
+/**
+ * Returns the average price of all articles in the shopping cart
+ *
+ * @returns {number} The average price
+ */
+function averagePrice() {
+    let prices = cart.map(article => parseFloat(article.price));
+    return math.mean(prices);
 }
