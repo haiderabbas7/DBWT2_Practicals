@@ -6,13 +6,20 @@
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 </head>
 <body>
-    <div id="app">
-        <div v-for="object in objects">
-            <div v-for="(name, price) in object">
-                {{name, price}}
-            </div>
-        </div>
-    </div>
+    <table id="app">
+        <thead>
+            <tr>
+                <td>Name</td>
+                <td>Price</td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr v-for="object in objects">
+                <td>{{object.name}}</td>
+                <td>{{object.price}}</td>
+            </tr>
+        </tbody>
+    </table>
     <script>
         let app = Vue.createApp( {
            data() {
