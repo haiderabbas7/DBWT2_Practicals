@@ -5,7 +5,7 @@
     <title>Abalo</title>
 
 </head>
-<body>
+<body id="app">
     @vite('resources/js/app.js')
     <nav>
         <script>
@@ -43,6 +43,9 @@
 
             document.body.prepend(nav);
         </script>
+        @verbatim
+            {{ msg }}
+        @endverbatim
     </nav>
 </body>
 </html>
