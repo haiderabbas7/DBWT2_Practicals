@@ -15,3 +15,6 @@ Route::get('/shoppingcart/{shoppingcartid}', [\App\Http\Controllers\ShoppingCart
 
 //Zum Erstellen von neuen Artikeln, M3 A8
 Route::post('/articles', [\App\Http\Controllers\ArticlesController::class, 'createNewArticle_api']);
+
+//Hilfsroute, damit ich vom Frontend direkt die Kategorien bekomme ohne den Umweg über den Controller
+Route::get('/kategorien', [\App\Http\Controllers\HomepageController::class, 'getKategorien_api']);

@@ -9,6 +9,12 @@ import { createApp } from 'vue';
 const vm = createApp({
     data() {
         return {
+            index_menu: {
+                    "Home": [],
+                    "Kategorien": [],
+                    "Verkaufen": [],
+                    "Unternehmen": ["Philosophie", "Karriere"]
+            },
             newArticle_csrfToken: '',
             newArticle_name: '',
             newArticle_price: '',
@@ -47,5 +53,17 @@ const vm = createApp({
             }
             return false;
         }
+    },
+    mounted() {
+        //Kategorien werden per API call geladen, nicht mehr über Controller umweg
+        let xhr = new XMLHttpRequest();
+        xhr.open('GET', '/api/kategorien');
+        xhr.onload = () => {
+            if (xhr.status === 200) {
+                let data = JSON.parse(xhr.responseText);
+                this.index_menu.Kategorien = data.map(kategorie => kategorie.name);
+            }
+        };
+        xhr.send();
     }
 }).mount('#app');
