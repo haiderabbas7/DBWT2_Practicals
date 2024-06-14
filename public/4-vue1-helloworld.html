@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Vue Hello World</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+</head>
+<body>
+    <div id="app">
+        <p>{{message}}</p>
+        <p>{{message.toLowerCase()}}</p>
+        <p>{{message.toUpperCase()}}</p>
+    </div>
+    <script>
+
+        let app = Vue.createApp({
+            data() {
+                return {
+                    message: 'Hello Vue'
+                };
+            }
+        });
+
+        let vm = app.mount('#app');
+    </script>
+</body>
+</html>

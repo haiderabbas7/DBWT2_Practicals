@@ -102,15 +102,23 @@ class ArticlesController
         ]);
     }
 
-    /**
-     * Searches for articles based on the given search term
-     *
-     * @param Request $request The request containing the search term
-     * @return \Illuminate\Http\JsonResponse The articles that match the search term
-     */
-    public function search_api(Request $request) {
+
+    public function search_articles_view(){
+        return view('search_articles');
+    }
+
+
+    /*public function search_api(Request $request) {
         $search = $request->get('search');
         $articles = Article::where('name', 'like', '%' . $search . '%')->get();
+        return response()->json($articles);
+    }*/
+
+    public function search_api(Request $request) {
+        $search = $request->get('search');
+        $articles = isset($search) ? DB::table('article')
+            ->whereRaw('LOWER(name) LIKE ?', ['%' . strtolower($search) . '%'])
+            ->get() : DB::table('article')->get();
         return response()->json($articles);
     }
 }

@@ -19,7 +19,9 @@ const vm = createApp({
             newArticle_price: '',
             newArticle_description: '',
             newArticle_status_color: 'green',
-            newArticle_status_text: ''
+            newArticle_status_text: '',
+            articleSearchTerm: '',
+            articleSearchResults: []
         }
     },
     methods: {
@@ -51,6 +53,33 @@ const vm = createApp({
                 xhr.send(formData);
             }
             return false;
+        },
+        searchArticles: function () {
+            //wenn searchTerm >= 3 ist, mach API call und pack JSON response auf vue variable articleSearchResults
+            if(this.articleSearchTerm.length >= 2 )
+                try {
+                    //const response = await fetch(`/api/articles?search=${this.articleSearchTerm}`)
+                    //const results = await response.json();
+                    let xhr = new XMLHttpRequest();
+                    xhr.open('GET',`/api/articles?search=${this.articleSearchTerm}`)
+                    xhr.onload = () => {
+                        let results = JSON.parse(xhr.responseText);
+                        this.articleSearchResults = results.map(article => ({
+                            id: article.id,
+                            name: article.name,
+                            price: article.price,
+                            description: article.description,
+                            creator_id: article.creator_id,
+                            createdate: article.createdate
+                        })).slice(0, 5);
+                    }
+                    xhr.send();
+                } catch (error) {
+                    console.error('Error fetching articles: ' + error);
+                }
+            else {
+                this.articleSearchResults = [];
+            }
         }
     },
     mounted() {
@@ -66,3 +95,4 @@ const vm = createApp({
         xhr.send();
     }
 }).mount('#app');
+
