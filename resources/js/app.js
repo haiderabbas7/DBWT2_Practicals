@@ -15,7 +15,6 @@ const vm = createApp({
                     "Verkaufen": [],
                     "Unternehmen": ["Philosophie", "Karriere"]
             },
-            newArticle_csrfToken: '',
             newArticle_name: '',
             newArticle_price: '',
             newArticle_description: '',

@@ -48,6 +48,7 @@
     </style>
 </head>
 <body id="app">
+    <!--hier war vorher das script tag, welches das HTML Form erstellt und ganz unten der EventListener auf dem button-->
     <form method="post" action="/articles" id="articleForm">
         @csrf
         <input type="text" name="name" placeholder="Artikelname" v-model="newArticle_name">
