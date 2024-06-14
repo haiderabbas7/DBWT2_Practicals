@@ -17,8 +17,9 @@
     <!-- JavaScripts -->
 </head>
 <body>
-    @verbatim
+
         <div id="app">
+            <input type="text" v-on:keydown="searchArticles">
             <table class="searchArticles">
                 <thead>
                 <tr>
@@ -30,15 +31,17 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr v-on:keydown="searchArticles" v-for="article in articleSearchResults" v-bind:key="articleSearchResults.article.id">
+                <tr v-for="article in articleSearchResults" v-bind:key="articleSearchResults.id">
+                    @verbatim
                     <td>{{article.name}}</td>
                     <td>{{article.price}}</td>
                     <td>{{article.description}}</td>
                     <td>{{article.creator_id}}</td>
                     <td>{{article.createdate}}</td>
+                    @endverbatim
                 </tr>
                 </tbody>
             </table>
         </div>
-    @endverbatim
+
 </body>

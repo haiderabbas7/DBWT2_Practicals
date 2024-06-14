@@ -16,7 +16,7 @@ const vm = createApp({
             newArticle_status_color: 'green',
             newArticle_status_text: '',
             articleSearchTerm: '',
-            articleSearchResults: []
+            articleSearchResults: [ ]
         }
     },
     methods: {
@@ -50,6 +50,8 @@ const vm = createApp({
             return false;
         },
         searchArticles: async function () {
+            //wenn searchTerm >= 3 ist, mach API call und pack JSON response auf vue variable articleSearchResults
+
             try {
                 const response = await fetch(`/api/articles?search=${this.articleSearchTerm}`)
                 const results = await response.json();
