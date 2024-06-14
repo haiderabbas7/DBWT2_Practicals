@@ -10,16 +10,14 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,600&display=swap" rel="stylesheet" />
-
     <!-- Styles -->
     <style>
     </style>
     <!-- JavaScripts -->
 </head>
 <body>
-
         <div id="app">
-            <input type="text" v-on:keydown="searchArticles">
+            <input type="text" name="search" v-model="articleSearchTerm" v-on:keydown="searchArticles" >
             <table class="searchArticles">
                 <thead>
                 <tr>
@@ -31,17 +29,16 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr v-for="article in articleSearchResults" v-bind:key="articleSearchResults.id">
-                    @verbatim
-                    <td>{{article.name}}</td>
-                    <td>{{article.price}}</td>
-                    <td>{{article.description}}</td>
-                    <td>{{article.creator_id}}</td>
-                    <td>{{article.createdate}}</td>
-                    @endverbatim
-                </tr>
+                    <tr v-for="article in articleSearchResults" v-bind:key="articleSearchResults.id">
+                        @verbatim
+                        <td>{{article.name}}</td>
+                        <td>{{article.price}}</td>
+                        <td>{{article.description}}</td>
+                        <td>{{article.creator_id}}</td>
+                        <td>{{article.createdate}}</td>
+                        @endverbatim
+                    </tr>
                 </tbody>
             </table>
         </div>
-
 </body>
