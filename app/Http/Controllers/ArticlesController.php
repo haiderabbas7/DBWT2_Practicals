@@ -108,9 +108,17 @@ class ArticlesController
     }
 
 
-    public function search_api(Request $request) {
+    /*public function search_api(Request $request) {
         $search = $request->get('search');
         $articles = Article::where('name', 'like', '%' . $search . '%')->get();
+        return response()->json($articles);
+    }*/
+
+    public function search_api(Request $request) {
+        $search = $request->get('search');
+        $articles = isset($search) ? DB::table('article')
+            ->whereRaw('LOWER(name) LIKE ?', ['%' . strtolower($search) . '%'])
+            ->get() : DB::table('article')->get();
         return response()->json($articles);
     }
 }
