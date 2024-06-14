@@ -14,7 +14,9 @@ const vm = createApp({
             newArticle_price: '',
             newArticle_description: '',
             newArticle_status_color: 'green',
-            newArticle_status_text: ''
+            newArticle_status_text: '',
+            articleSearchTerm: '',
+            articleSearchResults: []
         }
     },
     methods: {
@@ -46,6 +48,27 @@ const vm = createApp({
                 xhr.send(formData);
             }
             return false;
+        },
+        searchArticles: async function () {
+            try {
+                const response = await fetch(`/api/articles?search=${this.articleSearchTerm}`)
+                const results = await response.json();
+                if(results.length >= 3) {
+                    this.articleSearchResults = results.map(article => ({
+                        id: article.id,
+                        name: article.name,
+                        price: article.price,
+                        description: article.description,
+                        creator_id: article.creator_id,
+                        createdate: article.createdate
+                    })).slice(0, 5);
+                }
+                else {
+                    this.articleSearchResults = [];
+                }
+            } catch (error) {
+                console.error('Error fetching articles: ' + error);
+            }
         }
     }
 }).mount('#app');
