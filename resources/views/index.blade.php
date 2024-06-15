@@ -1,49 +1,26 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
+    @vite('resources/js/app.js')
     <meta charset="utf-8">
     <title>Abalo</title>
 
 </head>
 <body id="app">
-    @vite('resources/js/app.js')
-    <nav>
-        <script>
-            "use strict";
-
-            let kategorien = JSON.parse('@json(   $kategorien)');
-            let kategorienNamen = kategorien.map(kategorie => kategorie.name);
-
-            let menu = {
-                "Home": [],
-                "Kategorien": kategorienNamen,
-                "Verkaufen": [],
-                "Unternehmen": ["Philosophie", "Karriere"]
-            };
-
-            const nav = document.createElement("nav");
-            const outerList = document.createElement("ul");
-            nav.appendChild(outerList);
-
-            //mit entries bekommt man ein array der key-value paare
-            for (const [key, values] of Object.entries(menu)) {
-                const item = document.createElement('li');
-                item.textContent = key;
-                outerList.appendChild(item);
-                if (values) {
-                    const innerList = document.createElement('ul');
-                    item.appendChild(innerList);
-                    for (const value of values) {
-                        const innerItem = document.createElement('li');
-                        innerItem.textContent = value;
-                        innerList.appendChild(innerItem);
-                    }
-                }
-            }
-
-            document.body.prepend(nav);
-        </script>
-
-    </nav>
+    <!--HIER WAR VORHER SCRIPT TAG ZUM ERSTELLEN DER NAVIGATIONSLEISTE DER HOMEPAGE-->
+    @verbatim
+        <nav>
+            <ul>
+                <li v-for="(values, key) in index_menu" :key="key">
+                    {{ key }}
+                    <ul v-if="values.length > 0">
+                        <li v-for="(value, index) in values" :key="index">
+                            {{ value }}
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+    @endverbatim
 </body>
 </html>

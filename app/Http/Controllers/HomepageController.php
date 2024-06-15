@@ -8,7 +8,11 @@ use Illuminate\Http\Request;
 class HomepageController
 {
     public function index(){
+        return view('index');
+    }
+
+    public function getKategorien_api(){
         $kategorien = ArticleCategory::all();
-        return view('index', ['kategorien' => $kategorien]);
+        return response()->json($kategorien);
     }
 }
