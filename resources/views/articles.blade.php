@@ -40,7 +40,7 @@
             </tr>
         </table>
     </div>
-    <input type="text" name="search" v-model="articleSearchTerm" v-on:keydown="searchArticles" >
+    <input type="text" name="search" v-model="articleSearchTerm">
     <table>
         <tr v-for="article in articleSearchResults" v-bind:key="articleSearchResults.id">
             @verbatim

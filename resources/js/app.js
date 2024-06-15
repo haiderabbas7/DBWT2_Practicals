@@ -8,7 +8,7 @@ import './cookiecheck.js'
 
 /**
  * #TODO: Statt Event Listener Vue verwenden
- * #TODO: SearchTerm holen von URL
+ * #TODO articleShoppingCart nach neu Laden anzeigen lassen
  */
 import { createApp } from 'vue';
 const vm = createApp({
@@ -33,6 +33,13 @@ const vm = createApp({
             shoppingCartPrice: 0,
             shoppingCartAvg: 0,
             shoppingCartId: 1
+        }
+    },
+    watch: {
+        articleSearchTerm(newVal, oldVal) {
+            if(newVal.length >= 3 || oldVal.length > newVal.length) {
+                this.searchArticles();
+            }
         }
     },
     methods: {
@@ -85,7 +92,7 @@ const vm = createApp({
             xhr.send();
         },
         searchArticles: function () { // Wenn >= 2 automatisch Ausführen
-            //wenn searchTerm >= 3 ist, mach API call und pack JSON response auf vue variable articleSearchResults
+            //wenn searchTerm >= 2 ist, mach API call und pack JSON response auf vue variable articleSearchResults
             if (this.articleSearchTerm.length > 0) {
                 try {
                     let xhr = new XMLHttpRequest();
@@ -186,12 +193,18 @@ const vm = createApp({
             xhr.open('GET', `/api/shoppingcart/${this.shoppingCartId}`);
             xhr.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
             xhr.onload = function() {
-                this.articleShoppingCart = JSON.parse(xhr.responseText);
-                this.updateCartDisplay();
-                this.articleShoppingCart.forEach(article =>{
+                this.articleShoppingCart.push(JSON.parse(xhr.responseText));
+                // #TODO articleShoppingCart anzeigen lassen
+                this.articleShoppingCart.forEach(article => {
                     let button = document.querySelector(`.addToCartButton[data-id="${article.id}"]`);
-                    button.disabled = true;
+                    if (article in this.articleShoppingCart) {
+                        button.disabled = true;
+                    }
+                    else {
+                        button.disabled = false;
+                    }
                 });
+                this.updateCartDisplay();
             }
             xhr.send();
         },
@@ -215,7 +228,7 @@ const vm = createApp({
             }
         };
         xhr.send();
-        
+
         let params = new URLSearchParams(window.location.search);
         this.articleSearchTerm = params.get('search') || '';
         // Articles werden per API Call geladen, nicht mehr über Controller Umweg
