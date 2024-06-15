@@ -7,7 +7,6 @@ import './cookiecheck.js'
 // import './shoppingcart.js'
 
 /**
- * #TODO: Statt Event Listener Vue verwenden
  * #TODO articleShoppingCart nach neu Laden anzeigen lassen
  */
 import { createApp } from 'vue';
@@ -39,6 +38,9 @@ const vm = createApp({
         articleSearchTerm(newVal, oldVal) {
             if(newVal.length >= 3 || oldVal.length > newVal.length) {
                 this.searchArticles();
+            }
+            else {
+                this.getAllArticles();
             }
         }
     },
@@ -125,6 +127,7 @@ const vm = createApp({
             xhr.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
 
             xhr.onload = () => {
+                console.error(JSON.parse(xhr.responseText));
                 this.updateCartDisplay();
             };
 
@@ -134,13 +137,19 @@ const vm = createApp({
             button.disabled = true;
         },
         removeFromCart: function (articleId) {
-            this.articleShoppingCart = this.articleShoppingCart.filter(article => article.id !== articleId);
-            document.querySelector(`.addToCartButton[data-id="${articleId}"]`).disabled = false; // Aktiviert den "Hinzufügen"-Button
+            let button = document.querySelector(`.addToCartButton[data-id="Artikel${CSS.escape(articleId)}"]`); // Aktiviert den "Hinzufügen"-Button
+            if (button) {
+                button.disabled = false;
+            } else {
+                console.error("Button not found");
+            }
 
             let xhr = new XMLHttpRequest();
             xhr.open('DELETE', `/api/shoppingcart/${this.shoppingCartId}/articles/${articleId}`);
             xhr.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
             xhr.onload = () => {
+                console.error(JSON.parse(xhr.responseText));
+                this.articleShoppingCart = this.articleShoppingCart.filter(article => article.id !== articleId);
                 this.updateCartDisplay();
             };
             xhr.send();
@@ -196,12 +205,15 @@ const vm = createApp({
                 this.articleShoppingCart.push(JSON.parse(xhr.responseText));
                 // #TODO articleShoppingCart anzeigen lassen
                 this.articleShoppingCart.forEach(article => {
-                    let button = document.querySelector(`.addToCartButton[data-id="${article.id}"]`);
-                    if (article in this.articleShoppingCart) {
+                    let button = document.querySelector(`.addToCartButton[data-id="Artikel${CSS.escape(article.id)}"]`);
+                    if (article in this.articleShoppingCart && button) {
                         button.disabled = true;
                     }
-                    else {
+                    else if(button) {
                         button.disabled = false;
+                    }
+                    else {
+                        console.error("Button not Found");
                     }
                 });
                 this.updateCartDisplay();
@@ -232,7 +244,12 @@ const vm = createApp({
         let params = new URLSearchParams(window.location.search);
         this.articleSearchTerm = params.get('search') || '';
         // Articles werden per API Call geladen, nicht mehr über Controller Umweg
-        this.searchArticles();
+        if(this.articleSearchTerm.length > 0) {
+            this.searchArticles();
+        }
+        else {
+            this.getAllArticles();
+        }
 
         let buttons = document.getElementsByClassName('addToCartButton');
         if(buttons.length > 0) {

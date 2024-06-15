@@ -18,8 +18,6 @@
     <!-- JavaScripts -->
     <script>
         "use strict";
-        //holt sich die shopping_cart_id, welche der articles view übergeben wurde
-
     </script>
 </head>
 <body id="app">
@@ -35,7 +33,7 @@
                 @verbatim
                     <td>{{article.name}}</td>
                     <td>{{article.price}}€</td>
-                    <td><button class="removeFromCartButton" data-id="{{article.id}}" @click="removeFromCart(article.id)">-</button></td>
+                    <td><button class="removeFromCartButton" :data-id="'Artikel' + article.id" @click="removeFromCart(article.id)">-</button></td>
                 @endverbatim
             </tr>
         </table>
@@ -50,7 +48,7 @@
                 <td>{{article.creator_id}}</td>
                 <td>{{article.createdate}}</td>
                 <td><img :src="article.image_path" alt="Article Image"></td>
-                <td><button class="addToCartButton" data-id="{{article.id}}" @click="addToCart(article.id, article.name, article.price, $event.target)">+</button></td>
+                <td><button class="addToCartButton" :data-id="'Artikel' + article.id" @click="addToCart(article.id, article.name, article.price, $event.target)">+</button></td>
             @endverbatim
         </tr>
     </table>
