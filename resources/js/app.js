@@ -8,7 +8,7 @@ import './cookiecheck.js'
 
 /**
  * #TODO: Statt Event Listener Vue verwenden
- * #TODO: Altbauten von ShoppingCart ersetzen
+ * #TODO: SearchTerm holen von URL
  */
 import { createApp } from 'vue';
 const vm = createApp({
@@ -84,9 +84,9 @@ const vm = createApp({
             };
             xhr.send();
         },
-        searchArticles: function () {
+        searchArticles: function () { // Wenn >= 2 automatisch Ausführen
             //wenn searchTerm >= 3 ist, mach API call und pack JSON response auf vue variable articleSearchResults
-            if (this.articleSearchTerm.length >= 2) {
+            if (this.articleSearchTerm.length > 0) {
                 try {
                     let xhr = new XMLHttpRequest();
                     xhr.open('GET', `/api/articles?search=${this.articleSearchTerm}`)
@@ -215,9 +215,11 @@ const vm = createApp({
             }
         };
         xhr.send();
-
+        
+        let params = new URLSearchParams(window.location.search);
+        this.articleSearchTerm = params.get('search') || '';
         // Articles werden per API Call geladen, nicht mehr über Controller Umweg
-        this.getAllArticles();
+        this.searchArticles();
 
         let buttons = document.getElementsByClassName('addToCartButton');
         if(buttons.length > 0) {

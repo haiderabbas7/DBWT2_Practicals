@@ -48,7 +48,6 @@ class ShoppingCartController {
         else{
             return response()->json('Fehler');
         }
-
     }
 
     /**
