@@ -1,19 +1,20 @@
 "use strict";
+import * as math from 'mathjs';
 
 import './bootstrap';
 import './data.js'
 import './cookiecheck.js'
-import './shoppingcart.js'
+// import './shoppingcart.js'
 
 import { createApp } from 'vue';
 const vm = createApp({
     data() {
         return {
             index_menu: {
-                    "Home": [],
-                    "Kategorien": [],
-                    "Verkaufen": [],
-                    "Unternehmen": ["Philosophie", "Karriere"]
+                "Home": [],
+                "Kategorien": [],
+                "Verkaufen": [],
+                "Unternehmen": ["Philosophie", "Karriere"]
             },
             newArticle_csrfToken: '',
             newArticle_name: '',
@@ -22,20 +23,22 @@ const vm = createApp({
             newArticle_status_color: 'green',
             newArticle_status_text: '',
             articleSearchTerm: '',
-            articleSearchResults: []
+            articleSearchResults: [],
+            articleShoppingCart: [],
+            shoppingCartId: 1
         }
     },
     methods: {
         //der gleiche code wie im Button EventListener, nur natürlich etwas angepasst
-        sendNewArticleInfo: function (){
+        sendNewArticleInfo: function () {
             let name = this.$data.newArticle_name;
             let price = this.$data.newArticle_price;
             let description = this.$data.newArticle_description;
             //Clientseitige Checks
-            if(name === '' || isNaN(price) || price <= 0){
+            if (name === '' || isNaN(price) || price <= 0) {
                 this.newArticle_status_color = 'red';
-                this.newArticle_status_text = '<b>FEHLER</b>: Bitte geben Sie gültige Werte ein: Kein leerer Name und nur positive Werte für Preis';            }
-            else{
+                this.newArticle_status_text = '<b>FEHLER</b>: Bitte geben Sie gültige Werte ein: Kein leerer Name und nur positive Werte für Preis';
+            } else {
                 let xhr = new XMLHttpRequest();
                 xhr.open('POST', '/api/articles');
                 //hier per Arrow funktion wird this auf das vue objekt gebunden
@@ -43,7 +46,7 @@ const vm = createApp({
                     let response = JSON.parse(xhr.responseText);
                     this.newArticle_status_text = response.message;
                     this.newArticle_status_color = 'green';
-                    if(response.status === 'Fehler'){
+                    if (response.status === 'Fehler') {
                         this.newArticle_status_color = 'red';
                     }
                 };
@@ -96,6 +99,68 @@ const vm = createApp({
                 };
                 xhr.send();
             }
+        },
+        addToCart: function (articleId, articleName, articlePrice) {
+            this.articleShoppingCart.push({id: articleId, name: articleName, price: articlePrice});
+
+            let xhr = new XMLHttpRequest();
+            xhr.open('POST', '/api/shoppingcart');
+            xhr.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
+
+            xhr.onload = function () {
+                updateCartDisplay();
+            };
+
+            let formData = new FormData();
+            formData.append("article_id", articleId);
+            xhr.send(formData);
+        },
+        removeFromCart: function (articleId) {
+            this.articleShoppingCart = this.articleShoppingCart.filter(article => article.id !== articleId);
+            document.querySelector(`.addToCartButton[data-id="${articleId}"]`).disabled = false; // Aktiviert den "Hinzufügen"-Button
+
+            let xhr = new XMLHttpRequest();
+            xhr.open('DELETE', `/api/shoppingcart/${shoppingcart_id}/articles/${articleId}`);
+            xhr.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
+            xhr.onload = function () {
+                updateCartDisplay();
+            };
+            xhr.send();
+        },
+        updateCartDisplay: function () {
+            let cartDisplay = document.getElementById('cartDisplay');
+            let tableHtml = '<table>';
+            this.articleShoppingCart.forEach(article => {
+                tableHtml += `<tr>
+                    <td>${article.name}</td>
+                    <td>${article.price}</td>
+                    <td><button class="removeFromCartButton" data-id="${article.id}">-</button></td>
+                </tr>`;
+            });
+
+            tableHtml += '</table>';
+            cartDisplay.innerHTML = '<h2>Warenkorb</h2>' +
+                'Anzahl Produkte: ' + cart.length +
+                '<br>' + ' Preis: ' + this.sumPrices() + '€' +
+                '<br>' + ' Durchschnittspreis: ' + this.averagePrice() + '€' +
+                '<br>' + tableHtml;
+
+            // Event Listener für die "removeFromCartButton" hinzufügen
+            document.querySelectorAll('.removeFromCartButton').forEach(item => {
+                item.addEventListener('click', event => {
+                    // Artikel-ID aus dem data-id Attribut des Buttons holen
+                    let articleId = event.target.getAttribute('data-id');
+                    removeFromCart(articleId);
+                });
+            });
+        },
+        sumPrices: function () {
+            let prices = this.articleShoppingCart.map(article => parseFloat(article.price));
+            return prices.length ? math.sum(prices) : 0;
+        },
+        averagePrice: function() {
+            let prices = this.articleShoppingCart.map(article => parseFloat(article.price));
+            return prices.length ? math.mean(prices) : 0;
         }
     },
     mounted() {
@@ -128,6 +193,33 @@ const vm = createApp({
             }
         };
         xhr.send();
+
+
+        let buttons = document.getElementsByClassName('addToCartButton');
+        if(buttons.length > 0) {
+            for (let i = 0; i < buttons.length; i++) {
+                buttons[i].addEventListener('click', function() {
+                    let articleId = this.getAttribute('data-id');
+                    let articleName = this.getAttribute('data-name');
+                    let articlePrice = this.getAttribute('data-price');
+                    addToCart(articleId, articleName, articlePrice);
+                    this.disabled = true;
+                });
+            }
+
+            xhr = new XMLHttpRequest();
+            xhr.open('GET', `/api/shoppingcart/${shoppingcart_id}`);
+            xhr.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
+            xhr.onload = function() {
+                this.articleShoppingCart = JSON.parse(xhr.responseText);
+                this.updateCartDisplay();
+                this.articleShoppingCart.forEach(article =>{
+                    let button = document.querySelector(`.addToCartButton[data-id="${article.id}"]`);
+                    button.disabled = true;
+                });
+            }
+            xhr.send();
+        }
     }
 }).mount('#app');
 
