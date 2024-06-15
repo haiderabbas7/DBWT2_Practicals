@@ -21,6 +21,8 @@ class ArticlesController
 
         // If the search term is provided, search for the articles that contain the term
         // If no search term is provided, get all articles
+
+        // Unnötig
         $articles_req = isset($search) ? DB::table('article')
             ->whereRaw('LOWER(name) LIKE ?', ['%' . strtolower($search) . '%'])
             ->get() : DB::table('article')->get();
@@ -119,6 +121,9 @@ class ArticlesController
         $articles = isset($search) ? DB::table('article')
             ->whereRaw('LOWER(name) LIKE ?', ['%' . strtolower($search) . '%'])
             ->get() : DB::table('article')->get();
+        foreach ($articles as $article) {
+            $article->image_path = $this->getArticleImagePath($article->id);
+        }
         return response()->json($articles);
     }
 }

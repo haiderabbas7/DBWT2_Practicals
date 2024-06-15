@@ -28,20 +28,19 @@
         <span id="cartCount">Anzahl Produkte: 0</span> <br>
         Preis: 0€
     </div>
+    <input type="text" name="search" v-model="articleSearchTerm" v-on:keydown="searchArticles" >
     <table>
-        @foreach($articles_req as $article)
-            <tr>
-                <td>{{$article->id}} </td>
-                <td>{{$article->name}}</td>
-                <td>{{$article->price}}</td>
-                <td>{{$article->description}}</td>
-                <td>{{$article->creator_id}}</td>
-                <td>{{$article->createdate}}</td>
-                <td><img src="{{asset($article->image_path)}}" alt="Article Image"></td>
-
-                <td><button class="addToCartButton" data-id="{{$article->id}}" data-name="{{$article->name}}" data-price="{{$article->price}}">+</button></td>
-            </tr>
-      @endforeach
+        <tr v-for="article in articleSearchResults" v-bind:key="articleSearchResults.id">
+            @verbatim
+                <td>{{article.name}}</td>
+                <td>{{article.price}}</td>
+                <td>{{article.description}}</td>
+                <td>{{article.creator_id}}</td>
+                <td>{{article.createdate}}</td>
+                <td><img :src="article.image_path" alt="Article Image"></td>
+                <td><button class="addToCartButton" data-id="{{$article.id}}" data-name="{{$article.name}}" data-price="{{$article.price}}">+</button></td>
+            @endverbatim
+        </tr>
     </table>
 </body>
 </html>
