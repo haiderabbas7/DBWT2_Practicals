@@ -38,7 +38,7 @@
                 <td>{{article.creator_id}}</td>
                 <td>{{article.createdate}}</td>
                 <td><img :src="article.image_path" alt="Article Image"></td>
-                <td><button class="addToCartButton" data-id="{{$article.id}}" data-name="{{$article.name}}" data-price="{{$article.price}}">+</button></td>
+                <td><button class="addToCartButton" @click="addToCart(article.id, article.name, article.price)">+</button></td>
             @endverbatim
         </tr>
     </table>

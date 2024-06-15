@@ -6,6 +6,10 @@ import './data.js'
 import './cookiecheck.js'
 // import './shoppingcart.js'
 
+/**
+ * #TODO: Statt Event Listener Vue verwenden
+ * #TODO: Altbauten von ShoppingCart ersetzen
+ */
 import { createApp } from 'vue';
 const vm = createApp({
     data() {
@@ -58,6 +62,25 @@ const vm = createApp({
             }
             return false;
         },
+        getAllArticles: function() {
+            let xhr = new XMLHttpRequest();
+            xhr.open('GET','/api/articles');
+            xhr.onload = () => {
+                if(xhr.status === 200) {
+                    let results = JSON.parse(xhr.responseText);
+                    this.articleSearchResults = results.map(article => ({
+                        id: article.id,
+                        name: article.name,
+                        price: article.price,
+                        description: article.description,
+                        creator_id: article.creator_id,
+                        createdate: article.createdate,
+                        image_path: article.image_path
+                    }));
+                }
+            };
+            xhr.send();
+        },
         searchArticles: function () {
             //wenn searchTerm >= 3 ist, mach API call und pack JSON response auf vue variable articleSearchResults
             if (this.articleSearchTerm.length >= 2) {
@@ -81,23 +104,7 @@ const vm = createApp({
                     console.error('Error fetching articles: ' + error);
                 }
             } else {
-                let xhr = new XMLHttpRequest();
-                xhr.open('GET', '/api/articles');
-                xhr.onload = () => {
-                    if (xhr.status === 200) {
-                        let results = JSON.parse(xhr.responseText);
-                        this.articleSearchResults = results.map(article => ({
-                            id: article.id,
-                            name: article.name,
-                            price: article.price,
-                            description: article.description,
-                            creator_id: article.creator_id,
-                            createdate: article.createdate,
-                            image_path: article.image_path
-                        }));
-                    }
-                };
-                xhr.send();
+                this.getAllArticles();
             }
         },
         addToCart: function (articleId, articleName, articlePrice) {
@@ -107,8 +114,8 @@ const vm = createApp({
             xhr.open('POST', '/api/shoppingcart');
             xhr.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
 
-            xhr.onload = function () {
-                updateCartDisplay();
+            xhr.onload = () => {
+                this.updateCartDisplay();
             };
 
             let formData = new FormData();
@@ -122,8 +129,8 @@ const vm = createApp({
             let xhr = new XMLHttpRequest();
             xhr.open('DELETE', `/api/shoppingcart/${shoppingcart_id}/articles/${articleId}`);
             xhr.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
-            xhr.onload = function () {
-                updateCartDisplay();
+            xhr.onload = () => {
+                this.updateCartDisplay();
             };
             xhr.send();
         },
@@ -140,7 +147,7 @@ const vm = createApp({
 
             tableHtml += '</table>';
             cartDisplay.innerHTML = '<h2>Warenkorb</h2>' +
-                'Anzahl Produkte: ' + cart.length +
+                'Anzahl Produkte: ' + this.articleShoppingCart.length +
                 '<br>' + ' Preis: ' + this.sumPrices() + '€' +
                 '<br>' + ' Durchschnittspreis: ' + this.averagePrice() + '€' +
                 '<br>' + tableHtml;
@@ -150,9 +157,33 @@ const vm = createApp({
                 item.addEventListener('click', event => {
                     // Artikel-ID aus dem data-id Attribut des Buttons holen
                     let articleId = event.target.getAttribute('data-id');
-                    removeFromCart(articleId);
+                    this.removeFromCart(articleId);
                 });
             });
+        },
+        initializeButtons: function (buttons) {
+            for (let i = 0; i < buttons.length; i++) {
+                buttons[i].addEventListener('click', function() {
+                    let articleId = this.getAttribute('data-id');
+                    let articleName = this.getAttribute('data-name');
+                    let articlePrice = this.getAttribute('data-price');
+                    this.addToCart(articleId, articleName, articlePrice);
+                    this.disabled = true;
+                });
+            }
+
+            let xhr = new XMLHttpRequest();
+            xhr.open('GET', `/api/shoppingcart/${shoppingcart_id}`);
+            xhr.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
+            xhr.onload = function() {
+                this.articleShoppingCart = JSON.parse(xhr.responseText);
+                this.updateCartDisplay();
+                this.articleShoppingCart.forEach(article =>{
+                    let button = document.querySelector(`.addToCartButton[data-id="${article.id}"]`);
+                    button.disabled = true;
+                });
+            }
+            xhr.send();
         },
         sumPrices: function () {
             let prices = this.articleShoppingCart.map(article => parseFloat(article.price));
@@ -176,49 +207,11 @@ const vm = createApp({
         xhr.send();
 
         // Articles werden per API Call geladen, nicht mehr über Controller Umweg
-        xhr = new XMLHttpRequest();
-        xhr.open('GET','/api/articles');
-        xhr.onload = () => {
-            if(xhr.status === 200) {
-                let results = JSON.parse(xhr.responseText);
-                this.articleSearchResults = results.map(article => ({
-                    id: article.id,
-                    name: article.name,
-                    price: article.price,
-                    description: article.description,
-                    creator_id: article.creator_id,
-                    createdate: article.createdate,
-                    image_path: article.image_path
-                }));
-            }
-        };
-        xhr.send();
-
+        this.getAllArticles();
 
         let buttons = document.getElementsByClassName('addToCartButton');
         if(buttons.length > 0) {
-            for (let i = 0; i < buttons.length; i++) {
-                buttons[i].addEventListener('click', function() {
-                    let articleId = this.getAttribute('data-id');
-                    let articleName = this.getAttribute('data-name');
-                    let articlePrice = this.getAttribute('data-price');
-                    addToCart(articleId, articleName, articlePrice);
-                    this.disabled = true;
-                });
-            }
-
-            xhr = new XMLHttpRequest();
-            xhr.open('GET', `/api/shoppingcart/${shoppingcart_id}`);
-            xhr.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
-            xhr.onload = function() {
-                this.articleShoppingCart = JSON.parse(xhr.responseText);
-                this.updateCartDisplay();
-                this.articleShoppingCart.forEach(article =>{
-                    let button = document.querySelector(`.addToCartButton[data-id="${article.id}"]`);
-                    button.disabled = true;
-                });
-            }
-            xhr.send();
+            this.initializeButtons(buttons);
         }
     }
 }).mount('#app');
