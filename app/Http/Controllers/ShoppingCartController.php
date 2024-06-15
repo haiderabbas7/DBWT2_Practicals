@@ -14,8 +14,6 @@ class ShoppingCartController {
         if($request->input('article_id')) {
             $articleId = $request->input('article_id');
 
-
-
             // Abrufen der shoppingcart_id aus der Datenbank
             $shoppingCartId = ShoppingCart::where('creator_id', 1)
                 ->first()
@@ -56,7 +54,7 @@ class ShoppingCartController {
     /**
      * Gets the shopping cart items for the given ID of the user
      *
-     * @param $userId The ID of the user
+     * @param $shoppingcart_id The ID of the user
      * @return \Illuminate\Http\JsonResponse The shopping cart items
      */
     public function getCart_api($shoppingcart_id) {

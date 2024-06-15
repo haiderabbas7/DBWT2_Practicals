@@ -29,6 +29,9 @@ const vm = createApp({
             articleSearchTerm: '',
             articleSearchResults: [],
             articleShoppingCart: [],
+            shoppingCartCount: 0,
+            shoppingCartPrice: 0,
+            shoppingCartAvg: 0,
             shoppingCartId: 1
         }
     },
@@ -107,7 +110,7 @@ const vm = createApp({
                 this.getAllArticles();
             }
         },
-        addToCart: function (articleId, articleName, articlePrice) {
+        addToCart: function (articleId, articleName, articlePrice, button) {
             this.articleShoppingCart.push({id: articleId, name: articleName, price: articlePrice});
 
             let xhr = new XMLHttpRequest();
@@ -121,13 +124,14 @@ const vm = createApp({
             let formData = new FormData();
             formData.append("article_id", articleId);
             xhr.send(formData);
+            button.disabled = true;
         },
         removeFromCart: function (articleId) {
             this.articleShoppingCart = this.articleShoppingCart.filter(article => article.id !== articleId);
             document.querySelector(`.addToCartButton[data-id="${articleId}"]`).disabled = false; // Aktiviert den "Hinzufügen"-Button
 
             let xhr = new XMLHttpRequest();
-            xhr.open('DELETE', `/api/shoppingcart/${shoppingcart_id}/articles/${articleId}`);
+            xhr.open('DELETE', `/api/shoppingcart/${this.shoppingCartId}/articles/${articleId}`);
             xhr.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
             xhr.onload = () => {
                 this.updateCartDisplay();
@@ -135,6 +139,10 @@ const vm = createApp({
             xhr.send();
         },
         updateCartDisplay: function () {
+            this.shoppingCartPrice = this.sumPrices();
+            this.shoppingCartCount = this.articleShoppingCart.length;
+            this.shoppingCartAvg = this.averagePrice();
+            /*
             let cartDisplay = document.getElementById('cartDisplay');
             let tableHtml = '<table>';
             this.articleShoppingCart.forEach(article => {
@@ -160,20 +168,22 @@ const vm = createApp({
                     this.removeFromCart(articleId);
                 });
             });
+
+             */
         },
-        initializeButtons: function (buttons) {
-            for (let i = 0; i < buttons.length; i++) {
+        initializeShoppingCart: function (buttons) {
+            /*for (let i = 0; i < buttons.length; i++) {
                 buttons[i].addEventListener('click', function() {
                     let articleId = this.getAttribute('data-id');
                     let articleName = this.getAttribute('data-name');
                     let articlePrice = this.getAttribute('data-price');
-                    this.addToCart(articleId, articleName, articlePrice);
+                    this.addToCart(articleId, articleName, articlePrice, this);
                     this.disabled = true;
                 });
-            }
+            }*/
 
             let xhr = new XMLHttpRequest();
-            xhr.open('GET', `/api/shoppingcart/${shoppingcart_id}`);
+            xhr.open('GET', `/api/shoppingcart/${this.shoppingCartId}`);
             xhr.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
             xhr.onload = function() {
                 this.articleShoppingCart = JSON.parse(xhr.responseText);
@@ -211,7 +221,7 @@ const vm = createApp({
 
         let buttons = document.getElementsByClassName('addToCartButton');
         if(buttons.length > 0) {
-            this.initializeButtons(buttons);
+            this.initializeShoppingCart(buttons);
         }
     }
 }).mount('#app');

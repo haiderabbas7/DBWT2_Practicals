@@ -25,8 +25,20 @@
 <body id="app">
     <div id="cartDisplay">
         <h2>Warenkorb</h2>
-        <span id="cartCount">Anzahl Produkte: 0</span> <br>
-        Preis: 0€
+        @verbatim
+            <span id="cartCount">Anzahl Produkte: {{shoppingCartCount}}</span> <br>
+            <span id="pricetag">Preis: {{shoppingCartPrice}}€</span> <br>
+            <span id="avgPrice">Durchschnittspreis: {{shoppingCartAvg}}€</span>
+        @endverbatim
+        <table id="shoppingcartItems">
+            <tr v-for="article in articleShoppingCart">
+                @verbatim
+                    <td>{{article.name}}</td>
+                    <td>{{article.price}}€</td>
+                    <td><button class="removeFromCartButton" @click="removeFromCart(article.id)">-</button></td>
+                @endverbatim
+            </tr>
+        </table>
     </div>
     <input type="text" name="search" v-model="articleSearchTerm" v-on:keydown="searchArticles" >
     <table>
@@ -38,7 +50,7 @@
                 <td>{{article.creator_id}}</td>
                 <td>{{article.createdate}}</td>
                 <td><img :src="article.image_path" alt="Article Image"></td>
-                <td><button class="addToCartButton" @click="addToCart(article.id, article.name, article.price)">+</button></td>
+                <td><button class="addToCartButton" @click="addToCart(article.id, article.name, article.price, $event.target)">+</button></td>
             @endverbatim
         </tr>
     </table>
