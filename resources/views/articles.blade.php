@@ -29,11 +29,11 @@
             <span id="avgPrice">Durchschnittspreis: {{shoppingCartAvg}}€</span>
         @endverbatim
         <table id="shoppingcartItems">
-            <tr v-for="article in articleShoppingCart">
+            <tr v-for="article in articleShoppingCart[0]">
                 @verbatim
-                    <td>{{article.name}}</td>
-                    <td>{{article.price}}€</td>
-                    <td><button class="removeFromCartButton" :data-id="'Artikel' + article.id" @click="removeFromCart(article.id)">-</button></td>
+                    <td v-if="article.id">{{article.name}}</td>
+                    <td v-if="article.id">{{article.price}}€</td>
+                    <td v-if="article.id"><button class="removeFromCartButton" v-if="article.id" :data-id="'Artikel' + article.id" @click="removeFromCart(article.id)">-</button></td>
                 @endverbatim
             </tr>
         </table>

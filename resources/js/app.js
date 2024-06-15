@@ -120,7 +120,7 @@ const vm = createApp({
             }
         },
         addToCart: function (articleId, articleName, articlePrice, button) {
-            this.articleShoppingCart.push({id: articleId, name: articleName, price: articlePrice});
+            this.articleShoppingCart[0].push({id: articleId, name: articleName, price: articlePrice});
 
             let xhr = new XMLHttpRequest();
             xhr.open('POST', '/api/shoppingcart');
@@ -128,13 +128,13 @@ const vm = createApp({
 
             xhr.onload = () => {
                 console.error(JSON.parse(xhr.responseText));
-                this.updateCartDisplay();
             };
 
             let formData = new FormData();
             formData.append("article_id", articleId);
             xhr.send(formData);
             button.disabled = true;
+            this.updateCartDisplay();
         },
         removeFromCart: function (articleId) {
             let button = document.querySelector(`.addToCartButton[data-id="Artikel${CSS.escape(articleId)}"]`); // Aktiviert den "Hinzufügen"-Button
@@ -149,83 +149,53 @@ const vm = createApp({
             xhr.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
             xhr.onload = () => {
                 console.error(JSON.parse(xhr.responseText));
-                this.articleShoppingCart = this.articleShoppingCart.filter(article => article.id !== articleId);
+                this.articleShoppingCart[0] = this.articleShoppingCart[0].filter(article => article.id !== articleId);
                 this.updateCartDisplay();
             };
             xhr.send();
+
         },
         updateCartDisplay: function () {
             this.shoppingCartPrice = this.sumPrices();
-            this.shoppingCartCount = this.articleShoppingCart.length;
+            this.shoppingCartCount = this.articleShoppingCart[0].length;
             this.shoppingCartAvg = this.averagePrice();
-            /*
-            let cartDisplay = document.getElementById('cartDisplay');
-            let tableHtml = '<table>';
-            this.articleShoppingCart.forEach(article => {
-                tableHtml += `<tr>
-                    <td>${article.name}</td>
-                    <td>${article.price}</td>
-                    <td><button class="removeFromCartButton" data-id="${article.id}">-</button></td>
-                </tr>`;
-            });
-
-            tableHtml += '</table>';
-            cartDisplay.innerHTML = '<h2>Warenkorb</h2>' +
-                'Anzahl Produkte: ' + this.articleShoppingCart.length +
-                '<br>' + ' Preis: ' + this.sumPrices() + '€' +
-                '<br>' + ' Durchschnittspreis: ' + this.averagePrice() + '€' +
-                '<br>' + tableHtml;
-
-            // Event Listener für die "removeFromCartButton" hinzufügen
-            document.querySelectorAll('.removeFromCartButton').forEach(item => {
-                item.addEventListener('click', event => {
-                    // Artikel-ID aus dem data-id Attribut des Buttons holen
-                    let articleId = event.target.getAttribute('data-id');
-                    this.removeFromCart(articleId);
-                });
-            });
-
-             */
+            console.error(this.articleShoppingCart);
         },
-        initializeShoppingCart: function (buttons) {
-            /*for (let i = 0; i < buttons.length; i++) {
-                buttons[i].addEventListener('click', function() {
-                    let articleId = this.getAttribute('data-id');
-                    let articleName = this.getAttribute('data-name');
-                    let articlePrice = this.getAttribute('data-price');
-                    this.addToCart(articleId, articleName, articlePrice, this);
-                    this.disabled = true;
-                });
-            }*/
-
+        initializeShoppingCart: function () {
             let xhr = new XMLHttpRequest();
             xhr.open('GET', `/api/shoppingcart/${this.shoppingCartId}`);
             xhr.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
-            xhr.onload = function() {
+            xhr.onload = () => {
                 this.articleShoppingCart.push(JSON.parse(xhr.responseText));
-                // #TODO articleShoppingCart anzeigen lassen
-                this.articleShoppingCart.forEach(article => {
-                    let button = document.querySelector(`.addToCartButton[data-id="Artikel${CSS.escape(article.id)}"]`);
-                    if (article in this.articleShoppingCart && button) {
-                        button.disabled = true;
-                    }
-                    else if(button) {
-                        button.disabled = false;
-                    }
-                    else {
-                        console.error("Button not Found");
-                    }
-                });
+                if(this.articleShoppingCart[0].length > 0) {
+                    this.articleShoppingCart.forEach(article => {
+                        let button = document.querySelector(`.addToCartButton[data-id="Artikel${CSS.escape(article.id)}"]`);
+                        if (button) {
+                            button.disabled = article in this.articleShoppingCart;
+                        }
+                        else {
+                            console.error("Button not Found");
+                        }
+                    });
+                } else {
+                    console.error("Keine Artikel im ShoppingCart oder Fehler")
+                }
                 this.updateCartDisplay();
             }
             xhr.send();
         },
         sumPrices: function () {
-            let prices = this.articleShoppingCart.map(article => parseFloat(article.price));
+            let prices = this.articleShoppingCart[0].map(article => {
+                let price = parseFloat(article.price);
+                return isNaN(price) ? 0 : price; // Wenn der Preis NaN ist, verwenden Sie 0
+            });
             return prices.length ? math.sum(prices) : 0;
         },
         averagePrice: function() {
-            let prices = this.articleShoppingCart.map(article => parseFloat(article.price));
+            let prices = this.articleShoppingCart[0].map(article => {
+                let price = parseFloat(article.price);
+                return isNaN(price) ? 0 : price; // Wenn der Preis NaN ist, verwenden Sie 0
+            });
             return prices.length ? math.mean(prices) : 0;
         }
     },
@@ -251,10 +221,10 @@ const vm = createApp({
             this.getAllArticles();
         }
 
-        let buttons = document.getElementsByClassName('addToCartButton');
-        if(buttons.length > 0) {
-            this.initializeShoppingCart(buttons);
-        }
+        //let buttons = document.getElementsByClassName('addToCartButton');
+        //if(buttons.length > 0) {
+        this.initializeShoppingCart();
+        console.error(this.articleShoppingCart);
     }
 }).mount('#app');
 
