@@ -6,9 +6,6 @@ import './data.js'
 import './cookiecheck.js'
 // import './shoppingcart.js'
 
-/**
- * #TODO articleShoppingCart nach neu Laden anzeigen lassen
- */
 import { createApp } from 'vue';
 import {forEach, map} from "mathjs";
 const vm = createApp({

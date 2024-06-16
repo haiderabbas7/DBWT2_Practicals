@@ -20,5 +20,3 @@ Route::get('/articles', [App\Http\Controllers\ArticlesController::class, 'articl
 //Route::post('/articles', [\App\Http\Controllers\ArticlesController::class, 'createNewArticle'])->name('addnewarticle');
 
 Route::get('/newarticle',[\App\Http\Controllers\ArticlesController::class, 'getNewArticleInfo'])->name('newarticle');
-
-Route::get('/search_articles', [\App\Http\Controllers\ArticlesController::class, 'search_articles_view'])->name('search_articles_view');

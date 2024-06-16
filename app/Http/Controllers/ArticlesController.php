@@ -86,11 +86,6 @@ class ArticlesController
         ]);
     }
 
-
-    public function search_articles_view(){
-        return view('search_articles');
-    }
-
     public function search_api(Request $request) {
         $search = $request->get('search');
         $articles = isset($search) ? DB::table('article')
