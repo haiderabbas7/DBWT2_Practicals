@@ -29,11 +29,11 @@
             <span id="avgPrice">Durchschnittspreis: {{shoppingCartAvg}}€</span>
         @endverbatim
         <table id="shoppingcartItems">
-            <tr v-for="article in articleShoppingCart[0]">
+            <tr v-for="article in articleShoppingCart">
                 @verbatim
                     <td v-if="article.id">{{article.name}}</td>
                     <td v-if="article.id">{{article.price}}€</td>
-                    <td v-if="article.id"><button class="removeFromCartButton" v-if="article.id" :data-id="'Artikel' + article.id" @click="removeFromCart(article.id)">-</button></td>
+                    <td v-if="article.id"><button class="removeFromCartButton" :data-id="'Artikel' + article.id" @click="removeFromCart(article)">-</button></td>
                 @endverbatim
             </tr>
         </table>
@@ -48,7 +48,7 @@
                 <td>{{article.creator_id}}</td>
                 <td>{{article.createdate}}</td>
                 <td><img :src="article.image_path" alt="Article Image"></td>
-                <td><button class="addToCartButton" :data-id="'Artikel' + article.id" @click="addToCart(article.id, article.name, article.price, $event.target)">+</button></td>
+                <td><button class="addToCartButton" :data-id="'Artikel' + article.id" @click="addToCart(article)">+</button></td>
             @endverbatim
         </tr>
     </table>

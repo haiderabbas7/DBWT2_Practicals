@@ -10,6 +10,7 @@ import './cookiecheck.js'
  * #TODO articleShoppingCart nach neu Laden anzeigen lassen
  */
 import { createApp } from 'vue';
+import {forEach, map} from "mathjs";
 const vm = createApp({
     data() {
         return {
@@ -119,80 +120,74 @@ const vm = createApp({
                 this.getAllArticles();
             }
         },
-        addToCart: function (articleId, articleName, articlePrice, button) {
-            this.articleShoppingCart[0].push({id: articleId, name: articleName, price: articlePrice});
-
+        addToCart: function (article) {
             let xhr = new XMLHttpRequest();
             xhr.open('POST', '/api/shoppingcart');
             xhr.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
 
             xhr.onload = () => {
-                console.error(JSON.parse(xhr.responseText));
+                this.updateCartDisplay();
             };
 
             let formData = new FormData();
-            formData.append("article_id", articleId);
+            formData.append("article_id", article.id);
             xhr.send(formData);
-            button.disabled = true;
-            this.updateCartDisplay();
         },
-        removeFromCart: function (articleId) {
-            let button = document.querySelector(`.addToCartButton[data-id="Artikel${CSS.escape(articleId)}"]`); // Aktiviert den "Hinzufügen"-Button
-            if (button) {
-                button.disabled = false;
-            } else {
-                console.error("Button not found");
-            }
+        removeFromCart: function (rArticle) {
+            let button = document.querySelector(`.addToCartButton[data-id="Artikel${CSS.escape(rArticle.id)}"]`); // Aktiviert den "Hinzufügen"-Button
 
             let xhr = new XMLHttpRequest();
-            xhr.open('DELETE', `/api/shoppingcart/${this.shoppingCartId}/articles/${articleId}`);
+            xhr.open('DELETE', `/api/shoppingcart/${this.shoppingCartId}/articles/${rArticle.id}`);
             xhr.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
             xhr.onload = () => {
-                console.error(JSON.parse(xhr.responseText));
-                this.articleShoppingCart[0] = this.articleShoppingCart[0].filter(article => article.id !== articleId);
                 this.updateCartDisplay();
+                if (button) {
+                    button.disabled = false;
+                } else {
+                    console.error("Button not found");
+                }
             };
             xhr.send();
 
         },
         updateCartDisplay: function () {
-            this.shoppingCartPrice = this.sumPrices();
-            this.shoppingCartCount = this.articleShoppingCart[0].length;
-            this.shoppingCartAvg = this.averagePrice();
-            console.error(this.articleShoppingCart);
-        },
-        initializeShoppingCart: function () {
             let xhr = new XMLHttpRequest();
             xhr.open('GET', `/api/shoppingcart/${this.shoppingCartId}`);
             xhr.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
             xhr.onload = () => {
-                this.articleShoppingCart.push(JSON.parse(xhr.responseText));
-                if(this.articleShoppingCart[0].length > 0) {
+                let result = JSON.parse(xhr.responseText);
+                let array = [];
+                for(let article of result) {
+                    array = array.concat(article);
+                }
+                this.articleShoppingCart = array;
+                this.shoppingCartPrice = this.sumPrices();
+                this.shoppingCartCount = this.articleShoppingCart.length;
+                this.shoppingCartAvg = this.averagePrice();
+
+                if(this.articleShoppingCart.length > 0) {
                     this.articleShoppingCart.forEach(article => {
                         let button = document.querySelector(`.addToCartButton[data-id="Artikel${CSS.escape(article.id)}"]`);
                         if (button) {
-                            button.disabled = article in this.articleShoppingCart;
+                            button.disabled = this.articleShoppingCart.includes(article);
                         }
                         else {
                             console.error("Button not Found");
                         }
                     });
-                } else {
-                    console.error("Keine Artikel im ShoppingCart oder Fehler")
                 }
-                this.updateCartDisplay();
             }
             xhr.send();
         },
         sumPrices: function () {
-            let prices = this.articleShoppingCart[0].map(article => {
+            let prices = this.articleShoppingCart.map(article => {
                 let price = parseFloat(article.price);
                 return isNaN(price) ? 0 : price; // Wenn der Preis NaN ist, verwenden Sie 0
             });
             return prices.length ? math.sum(prices) : 0;
         },
         averagePrice: function() {
-            let prices = this.articleShoppingCart[0].map(article => {
+            let prices = this.articleShoppingCart.map(article => {
                 let price = parseFloat(article.price);
                 return isNaN(price) ? 0 : price; // Wenn der Preis NaN ist, verwenden Sie 0
             });
@@ -220,11 +215,7 @@ const vm = createApp({
         else {
             this.getAllArticles();
         }
-
-        //let buttons = document.getElementsByClassName('addToCartButton');
-        //if(buttons.length > 0) {
-        this.initializeShoppingCart();
-        console.error(this.articleShoppingCart);
+        this.updateCartDisplay();
     }
 }).mount('#app');
 
