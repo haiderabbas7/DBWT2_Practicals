@@ -65,9 +65,3 @@ function getAnzahlProdukteOfKategorie(data, kategorie){
     }
     return sum;
 }
-
-console.log(getMaxPreis(data));
-console.log(getMinPreisProdukt(data));
-console.log(getPreisSum(data));
-console.log(getGesamtWert(data));
-console.log(getAnzahlProdukteOfKategorie(data, 1));

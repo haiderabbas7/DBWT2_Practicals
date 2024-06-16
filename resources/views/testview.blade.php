@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
+    @vite('resources/js/app.js')
     <meta charset="utf-8">
     <title>Testview</title>
-    <script src="{{ asset('/js/data.js')}}"></script>
-    <script src="{{ asset('js/cookiecheck.js') }}"> </script>
+
 </head>
 <body>
+
 </body>
 </html>

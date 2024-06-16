@@ -30,6 +30,8 @@ class AuthController extends Controller
                 'createdate' => now()
             ]);
         }
+        $shoppingcart = ShoppingCart::where('creator_id', 1)->first();
+
         // Speichern Sie die ID des Warenkorbs in der Sitzung
         $request->session()->put('shoppingcart_id', $shoppingcart->id);
 
