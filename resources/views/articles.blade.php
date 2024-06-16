@@ -18,30 +18,39 @@
     <!-- JavaScripts -->
     <script>
         "use strict";
-        //holt sich die shopping_cart_id, welche der articles view übergeben wurde
-        var shoppingcart_id = JSON.parse('@json($shoppingcart_id)');
     </script>
 </head>
 <body id="app">
     <div id="cartDisplay">
         <h2>Warenkorb</h2>
-        <span id="cartCount">Anzahl Produkte: 0</span> <br>
-        Preis: 0€
-    </div>
-    <table>
-        @foreach($articles_req as $article)
-            <tr>
-                <td>{{$article->id}} </td>
-                <td>{{$article->name}}</td>
-                <td>{{$article->price}}</td>
-                <td>{{$article->description}}</td>
-                <td>{{$article->creator_id}}</td>
-                <td>{{$article->createdate}}</td>
-                <td><img src="{{asset($article->image_path)}}" alt="Article Image"></td>
-
-                <td><button class="addToCartButton" data-id="{{$article->id}}" data-name="{{$article->name}}" data-price="{{$article->price}}">+</button></td>
+        @verbatim
+            <span id="cartCount">Anzahl Produkte: {{shoppingCartCount}}</span> <br>
+            <span id="pricetag">Preis: {{shoppingCartPrice}}€</span> <br>
+            <span id="avgPrice">Durchschnittspreis: {{shoppingCartAvg}}€</span>
+        @endverbatim
+        <table id="shoppingcartItems">
+            <tr v-for="article in articleShoppingCart">
+                @verbatim
+                    <td v-if="article.id">{{article.name}}</td>
+                    <td v-if="article.id">{{article.price}}€</td>
+                    <td v-if="article.id"><button class="removeFromCartButton" :data-id="'Artikel' + article.id" @click="removeFromCart(article)">-</button></td>
+                @endverbatim
             </tr>
-      @endforeach
+        </table>
+    </div>
+    <input type="text" name="search" v-model="articleSearchTerm">
+    <table>
+        <tr v-for="article in articleSearchResults" v-bind:key="articleSearchResults.id">
+            @verbatim
+                <td>{{article.name}}</td>
+                <td>{{article.price}}</td>
+                <td>{{article.description}}</td>
+                <td>{{article.creator_id}}</td>
+                <td>{{article.createdate}}</td>
+                <td><img :src="article.image_path" alt="Article Image"></td>
+                <td><button class="addToCartButton" :data-id="'Artikel' + article.id" @click="addToCart(article)">+</button></td>
+            @endverbatim
+        </tr>
     </table>
 </body>
 </html>

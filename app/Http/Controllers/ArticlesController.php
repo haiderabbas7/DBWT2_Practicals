@@ -16,23 +16,7 @@ class ArticlesController
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Foundation\Application
      */
     public function articles(Request $request) {
-        // Get the search term from the URL
-        $search = $request->query('search');
-
-        // If the search term is provided, search for the articles that contain the term
-        // If no search term is provided, get all articles
-        $articles_req = isset($search) ? DB::table('article')
-            ->whereRaw('LOWER(name) LIKE ?', ['%' . strtolower($search) . '%'])
-            ->get() : DB::table('article')->get();
-
-        foreach ($articles_req as $article) {
-            $article->image_path = $this->getArticleImagePath($article->id);
-        }
-
-        //hier placeholder evtl rausmachen
-        $shoppingcart_id = "1";
-
-        return view('articles', ['articles_req' => $articles_req, 'shoppingcart_id' => $shoppingcart_id]);
+        return view('articles');
     }
 
     /**
@@ -102,23 +86,14 @@ class ArticlesController
         ]);
     }
 
-
-    public function search_articles_view(){
-        return view('search_articles');
-    }
-
-
-    /*public function search_api(Request $request) {
-        $search = $request->get('search');
-        $articles = Article::where('name', 'like', '%' . $search . '%')->get();
-        return response()->json($articles);
-    }*/
-
     public function search_api(Request $request) {
         $search = $request->get('search');
         $articles = isset($search) ? DB::table('article')
             ->whereRaw('LOWER(name) LIKE ?', ['%' . strtolower($search) . '%'])
             ->get() : DB::table('article')->get();
+        foreach ($articles as $article) {
+            $article->image_path = $this->getArticleImagePath($article->id);
+        }
         return response()->json($articles);
     }
 }
