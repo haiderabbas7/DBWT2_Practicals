@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Vue If</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+</head>
+<body>
+    <div id="app">
+        <input type="checkbox" id="server" value="server" v-model="serverdown">
+        <label for="server">Server</label>
+        <p v-if="serverdown">Der Server ist zurzeit nicht erreichbar</p>
+    </div>
+    <script>
+        let app = Vue.createApp({
+            data() {
+                return {
+                    serverdown: false
+                }
+            }
+        }).mount("#app");
+    </script>
+</body>
+</html>
