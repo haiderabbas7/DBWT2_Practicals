@@ -1,10 +1,17 @@
 "use strict";
-import * as math from 'mathjs';
 
 import './bootstrap';
 import './data.js'
 import './cookiecheck.js'
 // import './shoppingcart.js'
+
+//KOMPONENTEN IMPORTS, DAS @ STEHT FÜR DAS js Verzeichnis (hat der automatisch gemacht idfk)
+import MyCounter from "@/components/my-counter.vue";
+import Siteheader from "@/components/siteheader.vue";
+import Sitebody from "@/components/sitebody.vue";
+import Sitefooter from "@/components/sitefooter.vue";
+
+import * as math from 'mathjs';
 
 import { createApp } from 'vue';
 import {forEach, map} from "mathjs";
@@ -30,6 +37,13 @@ const vm = createApp({
             shoppingCartAvg: 0,
             shoppingCartId: 1
         }
+    },
+    //NEUE KOMPONENTEN HIER EINTRAGEN UNTER DEM IMPORT NAMEN, SONST GEHTS NICHT
+    components: {
+        MyCounter,
+        Siteheader,
+        Sitebody,
+        Sitefooter
     },
     watch: {
         articleSearchTerm(newVal, oldVal) {

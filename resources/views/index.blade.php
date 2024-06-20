@@ -4,10 +4,8 @@
     @vite('resources/js/app.js')
     <meta charset="utf-8">
     <title>Abalo</title>
-
 </head>
 <body id="app">
-    <!--HIER WAR VORHER SCRIPT TAG ZUM ERSTELLEN DER NAVIGATIONSLEISTE DER HOMEPAGE-->
     @verbatim
         <nav>
             <ul>
@@ -22,5 +20,6 @@
             </ul>
         </nav>
     @endverbatim
+    <!--<my-counter></my-counter>-->
 </body>
 </html>
