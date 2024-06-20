@@ -20,7 +20,10 @@
 $dir = __DIR__;
 $files = scandir($dir);
 
-$files = array_diff($files, array('.', '..'));
+// Liste der Dateien, die Sie ausblenden möchten
+$exclude_files = array('.', '..', 'index.php', 'components', 'beispiel-app.js');
+
+$files = array_diff($files, $exclude_files);
 
 natsort($files);
 
