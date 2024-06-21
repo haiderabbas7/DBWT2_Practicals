@@ -14,16 +14,9 @@ import Sitefooter from "@/components/sitefooter.vue";
 import * as math from 'mathjs';
 
 import { createApp } from 'vue';
-import {forEach, map} from "mathjs";
 const vm = createApp({
     data() {
         return {
-            index_menu: {
-                "Home": [],
-                "Kategorien": [],
-                "Verkaufen": [],
-                "Unternehmen": ["Philosophie", "Karriere"]
-            },
             newArticle_name: '',
             newArticle_price: '',
             newArticle_description: '',
