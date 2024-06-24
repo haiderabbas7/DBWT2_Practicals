@@ -21,6 +21,7 @@ class MyChat implements MessageComponentInterface {
     }
 
     public function onMessage(ConnectionInterface $from, $msg) {
+        //diese zeile eingefügt zum testen
         echo $msg;
         foreach ($this->clients as $client) {
             if ($from != $client) {
