@@ -9,6 +9,9 @@ export default {
     data() {
         return {
             colors: ["#92A1C6", "#146A7C", "#F0AB3D", "#C271B4", "#C20D90"],
+            size: 80,
+            variant: "bauhaus",
+            name: "Mujahid Anuar"
         };
     }
 };
@@ -17,7 +20,7 @@ export default {
 
 
 <template>
-    <Avatar :size="80" variant="bauhaus" name="Mujahid Anuar" :colors="colors" />
+    <Avatar :size="size" :variant="variant" :name="name" :colors="colors" />
 </template>
 
 
