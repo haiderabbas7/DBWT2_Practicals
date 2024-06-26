@@ -27,18 +27,16 @@ export default {
 </script>
 
 <template>
-    <nav>
-        <ul class="homepage-menu">
-            <li class="homepage-menu__item" v-for="(values, key) in index_SPA_menu" :key="key">
-                {{ key }}
-                <ul v-if="values.length > 0">
-                    <li class="homepage-menu__item--sub homepage-menu__item--sub" v-for="(value, index) in values" :key="index">
-                        {{ value }}
-                    </li>
-                </ul>
-            </li>
-        </ul>
-    </nav>
+    <ul class="homepage-menu">
+        <li class="homepage-menu__item" v-for="(values, key) in index_SPA_menu" :key="key">
+            {{ key }}
+            <ul v-if="values.length > 0">
+                <li class="homepage-menu__item--sub homepage-menu__item--sub" v-for="(value, index) in values" :key="index">
+                    {{ value }}
+                </li>
+            </ul>
+        </li>
+    </ul>
 </template>
 
 <style lang="scss" scoped>

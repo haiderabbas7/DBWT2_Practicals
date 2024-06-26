@@ -1,11 +1,12 @@
 <script>
+
 export default {
-    name: "sitebody"
+    name: "sitebody",
 }
 </script>
 
 <template>
-
+    <test></test>
 </template>
 
 <style scoped>
