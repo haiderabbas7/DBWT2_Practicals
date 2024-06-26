@@ -6,7 +6,6 @@ export default {
 </script>
 
 <template>
-    <test></test>
 </template>
 
 <style scoped>

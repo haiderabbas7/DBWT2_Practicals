@@ -8,23 +8,44 @@ export default {
     },
     data() {
         return {
-            colors: ["#92A1C6", "#146A7C", "#F0AB3D", "#C271B4", "#C20D90"],
             size: 80,
-            variant: "bauhaus",
-            name: "Mujahid Anuar"
+            square: false,
+            // "bauhaus" | "beam" | "marble" | "pixel" | "ring" | "sunset"
+            variant: "pixel",
+            //hier kann man verschiedene zeichenfolgen eingeben, um das muster zu ändern
+            name: "abcde",
+            colors: this.generateRandomColors(5)
         };
+    },
+    methods: {
+        generateRandomColors(amount) {
+            let colors = [];
+            for (let i = 0; i < amount; i++) {
+                let color = '#' + Math.floor(Math.random() * 16777215).toString(16);
+                colors.push(color);
+            }
+            return colors;
+        }
     }
 };
 </script>
 
 
-
 <template>
-    <Avatar :size="size" :variant="variant" :name="name" :colors="colors" />
+    <div>
+        <Avatar :size="size" :square="square" :variant="variant" :name="name" :colors="colors"/>
+        <a href="/login">Click here to login!</a>
+    </div>
 </template>
 
 
-
 <style scoped>
-
+div{
+    margin-right: 40px;
+    display: flex;
+    flex-direction: column;
+}
+a {
+    text-decoration: none;
+}
 </style>

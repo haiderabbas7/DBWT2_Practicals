@@ -34,7 +34,7 @@ class AuthController extends Controller
 
         // Speichern Sie die ID des Warenkorbs in der Sitzung
         $request->session()->put('shoppingcart_id', $shoppingcart->id);
-
+        $request->session()->save();
         return redirect()->route('haslogin');
     }
     public function logout(Request $request) {
