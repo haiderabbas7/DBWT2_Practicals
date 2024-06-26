@@ -10,12 +10,14 @@ import MyCounter from "@/components/my-counter.vue";
 import Siteheader from "@/components/siteheader.vue";
 import Sitebody from "@/components/sitebody.vue";
 import Sitefooter from "@/components/sitefooter.vue";
+import Impressum from "@/components/impressum.vue";
 
 import * as math from 'mathjs';
 
 import { createApp } from 'vue';
 import {forEach, map} from "mathjs";
 const vm = createApp({
+    props: ["showImpressum"],
     data() {
         return {
             index_menu: {
@@ -35,7 +37,8 @@ const vm = createApp({
             shoppingCartCount: 0,
             shoppingCartPrice: 0,
             shoppingCartAvg: 0,
-            shoppingCartId: 1
+            shoppingCartId: 1,
+            showImpressum: false
         }
     },
     //NEUE KOMPONENTEN HIER EINTRAGEN UNTER DEM IMPORT NAMEN, SONST GEHTS NICHT
@@ -43,7 +46,8 @@ const vm = createApp({
         MyCounter,
         Siteheader,
         Sitebody,
-        Sitefooter
+        Sitefooter,
+        Impressum
     },
     watch: {
         articleSearchTerm(newVal, oldVal) {
@@ -202,6 +206,9 @@ const vm = createApp({
                 return isNaN(price) ? 0 : price; // Wenn der Preis NaN ist, verwenden Sie 0
             });
             return prices.length ? math.mean(prices) : 0;
+        },
+        toggleImpressum: function () {
+            this.showImpressum = !this.showImpressum;
         }
     },
     mounted() {
