@@ -1,14 +1,23 @@
 <script>
 export default {
-    name: "sitefooter"
+    name: "sitefooter",
+    emits: ['impressum'],
+    methods: {
+        showImpressum: function(evt){
+            console.log("Button clicked");
+            this.$emit('impressum', true);
+        }
+    }
 }
 </script>
 
+
 <template>
-    <nav>
-        <a href="/" id="impressum-link" @click=toggleImpressum()>Impressum</a>
-    </nav>
+    <div>
+        <button id="impressum-button" @click="showImpressum">Impressum</button>
+    </div>
 </template>
+
 
 <style scoped>
 

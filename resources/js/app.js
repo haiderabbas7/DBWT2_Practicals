@@ -15,7 +15,6 @@ import { createApp } from 'vue';
 import {boolean, forEach, map} from "mathjs";
 
 const vm = createApp({
-    props: { },
     data() {
         return {
             //hier benutze ich 1 als placeholder
@@ -25,7 +24,7 @@ const vm = createApp({
             newArticle_description: '',
             newArticle_status_color: 'green',
             newArticle_status_text: '',
-            showImpressum: true
+            impressum: false
         }
     },
     components: {
@@ -65,33 +64,12 @@ const vm = createApp({
             }
             return false;
         },
-
-        toggleImpressum: function (event) {
-            this.showImpressum = !this.showImpressum;
-            let impressum = document.querySelector(`#show-impressum`);
-            let noImpressum = document.querySelector(`#show-impressum`);
-            if(this.showImpressum) {
-                impressum.enable();
-                noImpressum.disable();
-            }
-            else {
-                impressum.disable();
-                noImpressum.enable();
-            }
+        handleShowImpressum: function (){
+            this.impressum = !this.impressum;
+            console.log("Impressum is now " + this.impressum);
         }
     },
     mounted() {
-        let params = new URLSearchParams(window.location.search);
-        this.articleSearchTerm = params.get('search') || '';
-        // Articles werden per API Call geladen, nicht mehr über Controller Umweg
-        if(this.articleSearchTerm.length > 0) {
-            this.searchArticles();
-        }
-        else {
-            this.getAllArticles();
-        }
-        this.updateCartDisplay();
-
         //erstellt pro Client und pro Aufgabe die Broadcaster verbindung
         //let socket_maintenance = new WebSocket('ws://localhost:8081/maintenance');
         //hier noch code zum handeln der Aufg11, mach ich gleich
@@ -118,6 +96,5 @@ const vm = createApp({
         //let socket_articleOnSale = new WebSocket('ws://localhost:8081/articleOnSale');
         //hier noch code zum handeln der Aufg13, mach ich gleich
     }
-});
-vm.mount('#app');
+}).mount('#app');
 
