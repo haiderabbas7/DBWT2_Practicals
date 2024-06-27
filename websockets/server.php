@@ -44,8 +44,23 @@ class MaintenanceBroadcaster implements MessageComponentInterface{
         $this->clients = new \SplObjectStorage;
     }
 
+    private function printConnectedUsers(){
+        echo "\nUsers connected: ";
+        foreach ($this->clients as $conn) {
+            $value = $this->clients[$conn];
+            echo "$value ";
+        }
+    }
+
     public function onOpen(ConnectionInterface $conn) {
         $this->clients->attach($conn);
+        $data = [
+            'message' => "In Kürze verbessern wir Abalo für Sie!\nNach einer kurzen Pause sind wir wieder\nfür Sie da! Versprochen."
+        ];
+        $json = json_encode($data);
+        foreach ($this->clients as $client) {
+            $client->send($json);
+        }
     }
 
     public function onMessage(ConnectionInterface $from, $msg) {
@@ -154,7 +169,6 @@ class ArticleOnSaleBroadcaster implements MessageComponentInterface{
         $conn->close();
     }
 }
-
 
 
 $app = new Ratchet\App('localhost', 8081);

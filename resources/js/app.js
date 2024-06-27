@@ -71,13 +71,26 @@ const vm = createApp({
     },
     mounted() {
         //erstellt pro Client und pro Aufgabe die Broadcaster verbindung
-        //let socket_maintenance = new WebSocket('ws://localhost:8081/maintenance');
-        //hier noch code zum handeln der Aufg11, mach ich gleich
+        let socket_maintenance = new WebSocket('ws://localhost:8081/maintenance');
+        socket_maintenance.onopen = (event) => {
+            //
+        };
+        socket_maintenance.onclose = (closeEvent) => {
+            console.log(
+                'Connection closed' +
+                ': code=', closeEvent.code,
+                '; reason=', closeEvent.reason);
+        };
+        socket_maintenance.onmessage = (msgEvent) => {
+            let data = JSON.parse(msgEvent.data);
+            let message = data.message;
+            alert(message);
+        };
 
-        //STATUS: VERBINDUNG FUNKTIONIERT
+
+
         let socket_articleSold = new WebSocket('ws://localhost:8081/articleSold');
         socket_articleSold.onopen = (event) => {
-            //er schickt dem broadcaster seine userID, damit broadcaster die verbindung mit dem user verbinden kann
             socket_articleSold.send(this.userID);
         };
         socket_articleSold.onclose = (closeEvent) => {
