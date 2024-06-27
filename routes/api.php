@@ -20,5 +20,4 @@ Route::post('/articles', [\App\Http\Controllers\ArticlesController::class, 'crea
 Route::get('/kategorien', [\App\Http\Controllers\HomepageController::class, 'getKategorien_api']);
 
 //Route zur Benachrichtigung von verkauften Artikeln
-//MUSS POST SEIN ABER ICH TESTE DAS MIT GET
-Route::get('articles/{id}/sold', [\App\Http\Controllers\ArticlesController::class, 'articleSold_api']);
+Route::post('articles/{id}/sold', [\App\Http\Controllers\ArticlesController::class, 'articleSold_api']);

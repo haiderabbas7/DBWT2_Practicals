@@ -88,8 +88,7 @@ const vm = createApp({
         };
         socket_articleSold.onmessage = (msgEvent) => {
             //hier soll die nachricht vom broadcaster angenommen werden und der alert ausgelöst werden
-            let data = JSON.parse(msgEvent.data);
-            console.log('Message received', data);
+            console.log('Message received');
         };
 
 
