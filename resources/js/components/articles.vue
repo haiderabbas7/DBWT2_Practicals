@@ -23,21 +23,18 @@
                     this.page = 1;
                     this.searchArticles();
                 }
-                else {
-                    this.page = 1;
-                    this.getAllArticles();
-                }
             },
             page() {
-                this.getAllArticles();
+                this.searchArticles();
             }
         },
         methods: {
-            getAllArticles: function() {
-                let xhr = new XMLHttpRequest();
-                xhr.open('GET',`/api/articles?search=${this.page}`);
-                xhr.onload = () => {
-                    if(xhr.status === 200) {
+            searchArticles: function () { // Wenn >= 2 automatisch Ausführen
+                //wenn searchTerm >= 2 ist, mach API call und pack JSON response auf vue variable articleSearchResults
+                try {
+                    let xhr = new XMLHttpRequest();
+                    xhr.open('GET', `/api/articles?search=${this.articleSearchTerm}&page=${this.page}`);
+                    xhr.onload = () => {
                         let results = JSON.parse(xhr.responseText);
                         this.articleSearchResults = results.map(article => ({
                             id: article.id,
@@ -49,33 +46,9 @@
                             image_path: article.image_path
                         }));
                     }
-                };
-                xhr.send();
-            },
-            searchArticles: function () { // Wenn >= 2 automatisch Ausführen
-                //wenn searchTerm >= 2 ist, mach API call und pack JSON response auf vue variable articleSearchResults
-                if (this.articleSearchTerm.length > 0) {
-                    try {
-                        let xhr = new XMLHttpRequest();
-                        xhr.open('GET', `/api/articles?search=${this.articleSearchTerm}&page=${this.page}`);
-                        xhr.onload = () => {
-                            let results = JSON.parse(xhr.responseText);
-                            this.articleSearchResults = results.map(article => ({
-                                id: article.id,
-                                name: article.name,
-                                price: article.price,
-                                description: article.description,
-                                creator_id: article.creator_id,
-                                createdate: article.createdate,
-                                image_path: article.image_path
-                            }))//.slice(0, 5);
-                        }
-                        xhr.send();
-                    } catch (error) {
-                        console.error('Error fetching articles: ' + error);
-                    }
-                } else {
-                    this.getAllArticles();
+                    xhr.send();
+                } catch (error) {
+                    console.error('Error fetching articles: ' + error);
                 }
             },
             addToCart: function (article) {
@@ -167,12 +140,8 @@
             let params = new URLSearchParams(window.location.search);
             this.articleSearchTerm = params.get('search') || '';
             // Articles werden per API Call geladen, nicht mehr über Controller Umweg
-            if(this.articleSearchTerm.length > 0) {
-                this.searchArticles();
-            }
-            else {
-                this.getAllArticles();
-            }
+            this.searchArticles();
+
             this.updateCartDisplay();
 
 
