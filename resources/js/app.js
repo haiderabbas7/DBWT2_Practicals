@@ -3,36 +3,30 @@
 import './bootstrap';
 import './data.js'
 import './cookiecheck.js'
-// import './shoppingcart.js'
 
-//KOMPONENTEN IMPORTS, DAS @ STEHT FÜR DAS js Verzeichnis (hat der automatisch gemacht idfk)
 import MyCounter from "@/components/my-counter.vue";
 import Siteheader from "@/components/siteheader.vue";
 import Sitebody from "@/components/sitebody.vue";
 import Sitefooter from "@/components/sitefooter.vue";
+import * as math from 'mathjs';
 
 import { createApp } from 'vue';
+
 import {boolean, forEach, map} from "mathjs";
 
 const vm = createApp({
-    props: { },
     data() {
         return {
-            index_menu: {
-                "Home": [],
-                "Kategorien": [],
-                "Verkaufen": [],
-                "Unternehmen": ["Philosophie", "Karriere"]
-            },
+            //hier benutze ich 1 als placeholder
+            userID: 1,
             newArticle_name: '',
             newArticle_price: '',
             newArticle_description: '',
             newArticle_status_color: 'green',
             newArticle_status_text: '',
-            showImpressum: true
+            impressum: false
         }
     },
-    //NEUE KOMPONENTEN HIER EINTRAGEN UNTER DEM IMPORT NAMEN, SONST GEHTS NICHT
     components: {
         MyCounter,
         Siteheader,
@@ -70,32 +64,36 @@ const vm = createApp({
             }
             return false;
         },
-
-        toggleImpressum: function (event) {
-            this.showImpressum = !this.showImpressum;
-            let impressum = document.querySelector(`#show-impressum`);
-            let noImpressum = document.querySelector(`#show-impressum`);
-            if(this.showImpressum) {
-                impressum.enable();
-                noImpressum.disable();
-            }
-            else {
-                impressum.disable();
-                noImpressum.enable();
-            }
+        handleShowImpressum: function (){
+            this.impressum = !this.impressum;
+            console.log("Impressum is now " + this.impressum);
         }
     },
     mounted() {
-        //Kategorien werden per API Call geladen, nicht mehr über Controller umweg
-        let xhr = new XMLHttpRequest();
-        xhr.open('GET', '/api/kategorien');
-        xhr.onload = () => {
-            if (xhr.status === 200) {
-                let data = JSON.parse(xhr.responseText);
-                this.index_menu.Kategorien = data.map(kategorie => kategorie.name);
-            }
+        //erstellt pro Client und pro Aufgabe die Broadcaster verbindung
+        //let socket_maintenance = new WebSocket('ws://localhost:8081/maintenance');
+        //hier noch code zum handeln der Aufg11, mach ich gleich
+
+        //STATUS: VERBINDUNG FUNKTIONIERT
+        let socket_articleSold = new WebSocket('ws://localhost:8081/articleSold');
+        socket_articleSold.onopen = (event) => {
+            //er schickt dem broadcaster seine userID, damit broadcaster die verbindung mit dem user verbinden kann
+            socket_articleSold.send(this.userID);
         };
-        xhr.send();
+        socket_articleSold.onclose = (closeEvent) => {
+            console.log(
+                'Connection closed' +
+                ': code=', closeEvent.code,
+                '; reason=', closeEvent.reason);
+        };
+        socket_articleSold.onmessage = (msgEvent) => {
+            //hier soll die nachricht vom broadcaster angenommen werden und der alert ausgelöst werden
+            console.log('Message received');
+        };
+
+
+        //let socket_articleOnSale = new WebSocket('ws://localhost:8081/articleOnSale');
+        //hier noch code zum handeln der Aufg13, mach ich gleich
     }
 }).mount('#app');
 

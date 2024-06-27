@@ -31,6 +31,6 @@ export default {
     div {
         display: flex;
         justify-content: space-between;
-        width: 100px; /* Sie können die Breite nach Ihren Bedürfnissen anpassen */
+        width: 100px;
     }
 </style>

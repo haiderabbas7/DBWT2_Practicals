@@ -4,14 +4,18 @@ import Articles from "@/components/articles.vue"
 
 export default {
     name: "sitebody",
-    components: {Impressum, Articles}
+    props: ['impressum'],
+    components: {
+        Impressum,
+        Articles
+    },
 }
 </script>
 
 <template>
-    <div id="show-impressum"></div>
-    <div id="no-impressum">
-        <Articles/>
+    <div>
+        <Articles v-if="!impressum"></Articles>
+        <Impressum v-else></Impressum>
     </div>
 </template>
 

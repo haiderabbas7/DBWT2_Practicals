@@ -18,3 +18,6 @@ Route::post('/articles', [\App\Http\Controllers\ArticlesController::class, 'crea
 
 //Hilfsroute, damit ich vom Frontend direkt die Kategorien bekomme ohne den Umweg über den Controller
 Route::get('/kategorien', [\App\Http\Controllers\HomepageController::class, 'getKategorien_api']);
+
+//Route zur Benachrichtigung von verkauften Artikeln
+Route::post('articles/{id}/sold', [\App\Http\Controllers\ArticlesController::class, 'articleSold_api']);

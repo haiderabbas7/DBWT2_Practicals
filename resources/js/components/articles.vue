@@ -153,6 +153,15 @@
                 });
                 return prices.length ? math.mean(prices) : 0;
             },
+            buyArticle(articleId) {
+                axios.post(`/api/articles/${articleId}/sold`)
+                    .then(response => {
+                        console.log(response.data);
+                    })
+                    .catch(error => {
+                        console.error(error);
+                    });
+            }
         },
         mounted() {
             let params = new URLSearchParams(window.location.search);
@@ -196,6 +205,7 @@
             <td>{{article.createdate}}</td>
             <td><img :src="article.image_path" alt="Article Image"></td>
             <td><button class="addToCartButton" :data-id="'Artikel' + article.id" @click="addToCart(article)" :ref="el => addToCartButtons[article.id] = el">+</button></td>
+            <td><button class="buyButton" @click="buyArticle(article.id)">Kaufen</button></td>
         </tr>
     </table>
 </template>

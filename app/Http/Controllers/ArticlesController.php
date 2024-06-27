@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Article;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
 
 class ArticlesController
 {
@@ -37,6 +36,7 @@ class ArticlesController
             return "images/Placeholder_view_vector.svg.png"; // Placeholder
         }
     }
+
 
     public function getNewArticleInfo(){
         $con = 1;
@@ -86,6 +86,7 @@ class ArticlesController
         ]);
     }
 
+
     public function search_api(Request $request) {
         $search = $request->get('search');
         $page = $request->get('page', 1);
@@ -100,5 +101,17 @@ class ArticlesController
             $article->image_path = $this->getArticleImagePath($article->id);
         }
         return response()->json($articles);
+    }
+
+
+    public function articleSold_api(Request $request){
+        //holt sich die articleID aus der Route und findet den dazugehörigen User. einen fehlerfall kann es nicht geben
+        $articleID = $request->route('id');
+        $article = json_decode(Article::find($articleID))->name;
+        $userID = json_decode(Article::find($articleID))->creator_id;
+
+        //schickt die userID mit dem websocket controller an den broadcaster
+        $webSocketApplicationController = new WebSocketApplicationController();
+        $webSocketApplicationController->sendArticleSoldMessage($userID, $article);
     }
 }
