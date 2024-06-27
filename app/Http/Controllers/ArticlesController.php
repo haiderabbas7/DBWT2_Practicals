@@ -100,12 +100,13 @@ class ArticlesController
 
 
     public function articleSold_api(Request $request){
-        $data = [
-            "fromApplication" => true,
-            "msg" => "Halloechen!"
-        ];
-        $msg = json_encode($data);
+        //holt sich die articleID aus der Route und findet den dazugehörigen User. einen fehlerfall kann es nicht geben
+        $articleID = $request->route('id');
+        $article = json_decode(Article::find($articleID))->name;
+        $userID = json_decode(Article::find($articleID))->creator_id;
+
+        //schickt die userID mit dem websocket controller an den broadcaster
         $webSocketApplicationController = new WebSocketApplicationController();
-        $webSocketApplicationController->sendArticleSoldMessage($msg);
+        $webSocketApplicationController->sendArticleSoldMessage($userID, $article);
     }
 }

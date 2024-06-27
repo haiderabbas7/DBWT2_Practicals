@@ -89,14 +89,22 @@ class ArticleSoldBroadcaster implements MessageComponentInterface{
             $this->clients->detach($from);
             $this->clients->attach($from, intval($msg));
         }
-
         //versucht die nachricht als JSON zu decoden
         $decodedMsg = json_decode($msg);
         //wenn es ein JSON ist...
         if (json_last_error() == JSON_ERROR_NONE) {
             //..und das Attribut fromApplication gesetzt ist, so handelt es sich um eine Nachricht von der Anwendung
             if (isset($decodedMsg->fromApplication) && $decodedMsg->fromApplication === true) {
-                echo $decodedMsg->msg . "\n";
+                $userID = $decodedMsg->msg;
+                $article = $decodedMsg->article;
+                $client = null;
+                foreach ($this->clients as $cl) {
+                    if ($this->clients[$cl] == $userID) {
+                        $client = $cl;
+                        break;
+                    }
+                }
+                $client->send("Großartig! Ihr Artikel $article wurde erfolgreich verkauf!");
             }
         }
         echo "\nmessage: $msg";
