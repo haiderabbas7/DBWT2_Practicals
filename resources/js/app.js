@@ -10,14 +10,12 @@ import MyCounter from "@/components/my-counter.vue";
 import Siteheader from "@/components/siteheader.vue";
 import Sitebody from "@/components/sitebody.vue";
 import Sitefooter from "@/components/sitefooter.vue";
-import Impressum from "@/components/impressum.vue";
-
-import * as math from 'mathjs';
 
 import { createApp } from 'vue';
-import {forEach, map} from "mathjs";
+import {boolean, forEach, map} from "mathjs";
+
 const vm = createApp({
-    props: ["showImpressum"],
+    props: { },
     data() {
         return {
             index_menu: {
@@ -31,14 +29,7 @@ const vm = createApp({
             newArticle_description: '',
             newArticle_status_color: 'green',
             newArticle_status_text: '',
-            articleSearchTerm: '',
-            articleSearchResults: [],
-            articleShoppingCart: [],
-            shoppingCartCount: 0,
-            shoppingCartPrice: 0,
-            shoppingCartAvg: 0,
-            shoppingCartId: 1,
-            showImpressum: false
+            showImpressum: true
         }
     },
     //NEUE KOMPONENTEN HIER EINTRAGEN UNTER DEM IMPORT NAMEN, SONST GEHTS NICHT
@@ -46,19 +37,9 @@ const vm = createApp({
         MyCounter,
         Siteheader,
         Sitebody,
-        Sitefooter,
-        Impressum
+        Sitefooter
     },
-    watch: {
-        articleSearchTerm(newVal, oldVal) {
-            if(newVal.length >= 3 || oldVal.length > newVal.length) {
-                this.searchArticles();
-            }
-            else {
-                this.getAllArticles();
-            }
-        }
-    },
+
     methods: {
         //der gleiche code wie im Button EventListener, nur natürlich etwas angepasst
         sendNewArticleInfo: function () {
@@ -89,126 +70,19 @@ const vm = createApp({
             }
             return false;
         },
-        getAllArticles: function() {
-            let xhr = new XMLHttpRequest();
-            xhr.open('GET','/api/articles');
-            xhr.onload = () => {
-                if(xhr.status === 200) {
-                    let results = JSON.parse(xhr.responseText);
-                    this.articleSearchResults = results.map(article => ({
-                        id: article.id,
-                        name: article.name,
-                        price: article.price,
-                        description: article.description,
-                        creator_id: article.creator_id,
-                        createdate: article.createdate,
-                        image_path: article.image_path
-                    }));
-                }
-            };
-            xhr.send();
-        },
-        searchArticles: function () { // Wenn >= 2 automatisch Ausführen
-            //wenn searchTerm >= 2 ist, mach API call und pack JSON response auf vue variable articleSearchResults
-            if (this.articleSearchTerm.length > 0) {
-                try {
-                    let xhr = new XMLHttpRequest();
-                    xhr.open('GET', `/api/articles?search=${this.articleSearchTerm}`)
-                    xhr.onload = () => {
-                        let results = JSON.parse(xhr.responseText);
-                        this.articleSearchResults = results.map(article => ({
-                            id: article.id,
-                            name: article.name,
-                            price: article.price,
-                            description: article.description,
-                            creator_id: article.creator_id,
-                            createdate: article.createdate,
-                            image_path: article.image_path
-                        })).slice(0, 5);
-                    }
-                    xhr.send();
-                } catch (error) {
-                    console.error('Error fetching articles: ' + error);
-                }
-            } else {
-                this.getAllArticles();
-            }
-        },
-        addToCart: function (article) {
-            let xhr = new XMLHttpRequest();
-            xhr.open('POST', '/api/shoppingcart');
-            xhr.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
 
-            xhr.onload = () => {
-                this.updateCartDisplay();
-            };
-
-            let formData = new FormData();
-            formData.append("article_id", article.id);
-            xhr.send(formData);
-        },
-        removeFromCart: function (rArticle) {
-            let button = document.querySelector(`.addToCartButton[data-id="Artikel${CSS.escape(rArticle.id)}"]`); // Aktiviert den "Hinzufügen"-Button
-
-            let xhr = new XMLHttpRequest();
-            xhr.open('DELETE', `/api/shoppingcart/${this.shoppingCartId}/articles/${rArticle.id}`);
-            xhr.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
-            xhr.onload = () => {
-                this.updateCartDisplay();
-                if (button) {
-                    button.disabled = false;
-                } else {
-                    console.error("Button not found");
-                }
-            };
-            xhr.send();
-
-        },
-        updateCartDisplay: function () {
-            let xhr = new XMLHttpRequest();
-            xhr.open('GET', `/api/shoppingcart/${this.shoppingCartId}`);
-            xhr.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
-            xhr.onload = () => {
-                let result = JSON.parse(xhr.responseText);
-                let array = [];
-                for(let article of result) {
-                    array = array.concat(article);
-                }
-                this.articleShoppingCart = array;
-                this.shoppingCartPrice = this.sumPrices();
-                this.shoppingCartCount = this.articleShoppingCart.length;
-                this.shoppingCartAvg = this.averagePrice();
-
-                if(this.articleShoppingCart.length > 0) {
-                    this.articleShoppingCart.forEach(article => {
-                        let button = document.querySelector(`.addToCartButton[data-id="Artikel${CSS.escape(article.id)}"]`);
-                        if (button) {
-                            button.disabled = this.articleShoppingCart.includes(article);
-                        }
-                        else {
-                            console.error("Button not Found");
-                        }
-                    });
-                }
-            }
-            xhr.send();
-        },
-        sumPrices: function () {
-            let prices = this.articleShoppingCart.map(article => {
-                let price = parseFloat(article.price);
-                return isNaN(price) ? 0 : price; // Wenn der Preis NaN ist, verwenden Sie 0
-            });
-            return prices.length ? math.sum(prices) : 0;
-        },
-        averagePrice: function() {
-            let prices = this.articleShoppingCart.map(article => {
-                let price = parseFloat(article.price);
-                return isNaN(price) ? 0 : price; // Wenn der Preis NaN ist, verwenden Sie 0
-            });
-            return prices.length ? math.mean(prices) : 0;
-        },
-        toggleImpressum: function () {
+        toggleImpressum: function (event) {
             this.showImpressum = !this.showImpressum;
+            let impressum = document.querySelector(`#show-impressum`);
+            let noImpressum = document.querySelector(`#show-impressum`);
+            if(this.showImpressum) {
+                impressum.enable();
+                noImpressum.disable();
+            }
+            else {
+                impressum.disable();
+                noImpressum.enable();
+            }
         }
     },
     mounted() {
@@ -222,17 +96,6 @@ const vm = createApp({
             }
         };
         xhr.send();
-
-        let params = new URLSearchParams(window.location.search);
-        this.articleSearchTerm = params.get('search') || '';
-        // Articles werden per API Call geladen, nicht mehr über Controller Umweg
-        if(this.articleSearchTerm.length > 0) {
-            this.searchArticles();
-        }
-        else {
-            this.getAllArticles();
-        }
-        this.updateCartDisplay();
     }
 }).mount('#app');
 

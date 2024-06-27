@@ -1,23 +1,18 @@
 <script>
-import Impressum from "@/app.js";
+import Impressum from "@/components/impressum.vue";
+import Articles from "@/components/articles.vue"
 
 export default {
     name: "sitebody",
-    components: {Impressum}
+    components: {Impressum, Articles}
 }
 </script>
 
 <template>
-    <nav>
-        <div v-if="show-impressum">
-            <impressum>
-
-            </impressum>
-        </div>
-        <div v-else>
-
-        </div>
-    </nav>
+    <div id="show-impressum"></div>
+    <div id="no-impressum">
+        <Articles/>
+    </div>
 </template>
 
 <style scoped>

@@ -1,18 +1,12 @@
 <script>
 export default {
-    name: "sitefooter",
-
-    methods: {
-        handleClick: function (evt) {
-            this.$emit("toggleImpressum");
-        }
-    }
+    name: "sitefooter"
 }
 </script>
 
 <template>
     <nav>
-        <button href="#" id="impressum-link" @click="handleClick">Impressum</button>
+        <a href="/" id="impressum-link" @click=toggleImpressum()>Impressum</a>
     </nav>
 </template>
 
