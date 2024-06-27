@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Article;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
 
 class ArticlesController
 {
@@ -37,6 +36,7 @@ class ArticlesController
             return "images/Placeholder_view_vector.svg.png"; // Placeholder
         }
     }
+
 
     public function getNewArticleInfo(){
         $con = 1;
@@ -86,6 +86,7 @@ class ArticlesController
         ]);
     }
 
+
     public function search_api(Request $request) {
         $search = $request->get('search');
         $articles = isset($search) ? DB::table('article')
@@ -95,5 +96,16 @@ class ArticlesController
             $article->image_path = $this->getArticleImagePath($article->id);
         }
         return response()->json($articles);
+    }
+
+
+    public function articleSold_api(Request $request){
+        $data = [
+            "fromApplication" => true,
+            "msg" => "Halloechen!"
+        ];
+        $msg = json_encode($data);
+        $webSocketApplicationController = new WebSocketApplicationController();
+        $webSocketApplicationController->sendArticleSoldMessage($msg);
     }
 }

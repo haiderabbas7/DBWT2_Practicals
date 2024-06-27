@@ -15,6 +15,8 @@ import { createApp } from 'vue';
 const vm = createApp({
     data() {
         return {
+            //hier benutze ich 1 als placeholder
+            userID: 1,
             newArticle_name: '',
             newArticle_price: '',
             newArticle_description: '',
@@ -195,17 +197,6 @@ const vm = createApp({
         }
     },
     mounted() {
-        //Kategorien werden per API Call geladen, nicht mehr über Controller umweg
-        let xhr = new XMLHttpRequest();
-        xhr.open('GET', '/api/kategorien');
-        xhr.onload = () => {
-            if (xhr.status === 200) {
-                let data = JSON.parse(xhr.responseText);
-                this.index_menu.Kategorien = data.map(kategorie => kategorie.name);
-            }
-        };
-        xhr.send();
-
         let params = new URLSearchParams(window.location.search);
         this.articleSearchTerm = params.get('search') || '';
         // Articles werden per API Call geladen, nicht mehr über Controller Umweg
@@ -216,6 +207,32 @@ const vm = createApp({
             this.getAllArticles();
         }
         this.updateCartDisplay();
+
+        //erstellt pro Client und pro Aufgabe die Broadcaster verbindung
+        //let socket_maintenance = new WebSocket('ws://localhost:8081/maintenance');
+        //hier noch code zum handeln der Aufg11, mach ich gleich
+
+        //STATUS: VERBINDUNG FUNKTIONIERT
+        let socket_articleSold = new WebSocket('ws://localhost:8081/articleSold');
+        socket_articleSold.onopen = (event) => {
+            //er schickt dem broadcaster seine userID, damit broadcaster die verbindung mit dem user verbinden kann
+            socket_articleSold.send(this.userID);
+        };
+        socket_articleSold.onclose = (closeEvent) => {
+            console.log(
+                'Connection closed' +
+                ': code=', closeEvent.code,
+                '; reason=', closeEvent.reason);
+        };
+        socket_articleSold.onmessage = (msgEvent) => {
+            //hier soll die nachricht vom broadcaster angenommen werden und der alert ausgelöst werden
+            let data = JSON.parse(msgEvent.data);
+            console.log('Message received', data);
+        };
+
+
+        //let socket_articleOnSale = new WebSocket('ws://localhost:8081/articleOnSale');
+        //hier noch code zum handeln der Aufg13, mach ich gleich
     }
 });
 vm.mount('#app');
