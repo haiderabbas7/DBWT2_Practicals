@@ -12,7 +12,8 @@
                 shoppingCartCount: 0,
                 shoppingCartPrice: 0,
                 shoppingCartAvg: 0,
-                shoppingCartId: 1
+                shoppingCartId: 1,
+                addToCartButtons: {}
             }
         },
         watch: {
@@ -84,8 +85,7 @@
                 xhr.send(formData);
             },
             removeFromCart: function (rArticle) {
-                let cartDisplay = this.$refs.cartDisplay;
-                let button = cartDisplay.getElementsByClassName(`.addToCartButton[data-id="Artikel${CSS.escape(rArticle.id)}"]`);//document.querySelector(`.addToCartButton[data-id="Artikel${CSS.escape(rArticle.id)}"]`); // Aktiviert den "Hinzufügen"-Button
+                let button = this.addToCartButtons[rArticle.id];
 
                 let xhr = new XMLHttpRequest();
                 xhr.open('DELETE', `/api/shoppingcart/${this.shoppingCartId}/articles/${rArticle.id}`);
@@ -118,8 +118,7 @@
 
                     if(this.articleShoppingCart.length > 0) {
                         this.articleShoppingCart.forEach(article => {
-                            let cartDisplay = this.$refs.cartDisplay;
-                            let button = cartDisplay.getElementsByClassName(`.addToCartButton[data-id="Artikel${CSS.escape(article.id)}"]`);//document.querySelector(`.addToCartButton[data-id="Artikel${CSS.escape(article.id)}"]`);
+                            let button = this.addToCartButtons[article.id];
                             if (button) {
                                 button.disabled = this.articleShoppingCart.includes(article);
                             }
@@ -185,11 +184,11 @@
             <td>{{article.creator_id}}</td>
             <td>{{article.createdate}}</td>
             <td><img :src="article.image_path" alt="Article Image"></td>
-            <td><button class="addToCartButton" :data-id="'Artikel' + article.id" @click="addToCart(article)">+</button></td>
+            <td><button class="addToCartButton" :data-id="'Artikel' + article.id" @click="addToCart(article)" :ref="el => addToCartButtons[article.id] = el">+</button></td>
         </tr>
     </table>
 </template>
 
 <style scoped>
-    
+
 </style>
