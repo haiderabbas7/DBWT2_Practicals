@@ -57,8 +57,7 @@ class TestController
             ->first()
             ->id;
         //$id = $latestArticle->id;
-        $userID = Article::find(1);
-        $obj = json_decode($userID);
-        return response()->json($obj->creator_id);
+        $article = json_decode(Article::find(1))->name;
+        return response()->json($article);
     }
 }

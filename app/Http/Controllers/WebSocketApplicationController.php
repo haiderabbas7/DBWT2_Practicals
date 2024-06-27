@@ -24,7 +24,7 @@ class WebSocketApplicationController
     public function sendMaintenanceMessage($msg, $article): void{
         \Ratchet\Client\connect('ws://localhost:8081/maintenance')->then(function($conn) use ($msg, $article) {
             $jsonEncoded = $this->jsonEncoder($msg, $article);
-            $conn->send($msg);
+            $conn->send($jsonEncoded);
             $conn->close();
         }, function ($e) {
             echo "Could not connect: {$e->getMessage()}\n";
@@ -44,7 +44,7 @@ class WebSocketApplicationController
     public function sendArticleOnSaleMessage($msg, $article): void{
         \Ratchet\Client\connect('ws://localhost:8081/articleOnSale')->then(function($conn) use ($msg, $article) {
             $jsonEncoded = $this->jsonEncoder($msg, $article);
-            $conn->send($msg);
+            $conn->send($jsonEncoded);
             $conn->close();
         }, function ($e) {
             echo "Could not connect: {$e->getMessage()}\n";

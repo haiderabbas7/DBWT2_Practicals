@@ -105,7 +105,11 @@ class ArticleSoldBroadcaster implements MessageComponentInterface{
                     }
                 }
                 if ($client !== null) {
-                    $client->send("Großartig! Ihr Artikel $article wurde erfolgreich verkauf!");
+                    $data = [
+                        'message' => "Großartig! Ihr Artikel $article wurde erfolgreich verkauf!"
+                    ];
+                    $json = json_encode($data);
+                    $client->send($json);
                 }
             }
         }
