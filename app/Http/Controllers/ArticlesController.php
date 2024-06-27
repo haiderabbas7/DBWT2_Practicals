@@ -88,9 +88,14 @@ class ArticlesController
 
     public function search_api(Request $request) {
         $search = $request->get('search');
+        $page = $request->get('page', 1);
+        $limit = 5;
+        $offset = ($page - 1) * $limit;
         $articles = isset($search) ? DB::table('article')
             ->whereRaw('LOWER(name) LIKE ?', ['%' . strtolower($search) . '%'])
-            ->get() : DB::table('article')->get();
+            ->limit($limit)->offset($offset)
+            ->get()
+            : DB::table('article')->limit($limit)->offset($offset)->get();
         foreach ($articles as $article) {
             $article->image_path = $this->getArticleImagePath($article->id);
         }

@@ -13,23 +13,29 @@
                 shoppingCartPrice: 0,
                 shoppingCartAvg: 0,
                 shoppingCartId: 1,
-                addToCartButtons: {}
+                addToCartButtons: {},
+                page: 1
             }
         },
         watch: {
             articleSearchTerm(newVal, oldVal) {
                 if(newVal.length >= 3 || oldVal.length > newVal.length) {
+                    this.page = 1;
                     this.searchArticles();
                 }
                 else {
+                    this.page = 1;
                     this.getAllArticles();
                 }
+            },
+            page() {
+                this.getAllArticles();
             }
         },
         methods: {
             getAllArticles: function() {
                 let xhr = new XMLHttpRequest();
-                xhr.open('GET','/api/articles');
+                xhr.open('GET',`/api/articles?search=${this.page}`);
                 xhr.onload = () => {
                     if(xhr.status === 200) {
                         let results = JSON.parse(xhr.responseText);
@@ -51,7 +57,7 @@
                 if (this.articleSearchTerm.length > 0) {
                     try {
                         let xhr = new XMLHttpRequest();
-                        xhr.open('GET', `/api/articles?search=${this.articleSearchTerm}`);
+                        xhr.open('GET', `/api/articles?search=${this.articleSearchTerm}&page=${this.page}`);
                         xhr.onload = () => {
                             let results = JSON.parse(xhr.responseText);
                             this.articleSearchResults = results.map(article => ({
@@ -62,7 +68,7 @@
                                 creator_id: article.creator_id,
                                 createdate: article.createdate,
                                 image_path: article.image_path
-                            })).slice(0, 5);
+                            }))//.slice(0, 5);
                         }
                         xhr.send();
                     } catch (error) {
@@ -75,6 +81,7 @@
             addToCart: function (article) {
                 let xhr = new XMLHttpRequest();
                 xhr.open('POST', '/api/shoppingcart');
+                this.csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
                 xhr.setRequestHeader('X-CSRF-TOKEN', this.csrfToken);
 
                 xhr.onload = () => {
@@ -89,6 +96,7 @@
 
                 let xhr = new XMLHttpRequest();
                 xhr.open('DELETE', `/api/shoppingcart/${this.shoppingCartId}/articles/${rArticle.id}`);
+                this.csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
                 xhr.setRequestHeader('X-CSRF-TOKEN', this.csrfToken);
                 xhr.onload = () => {
                     this.updateCartDisplay();
@@ -104,6 +112,7 @@
             updateCartDisplay: function () {
                 let xhr = new XMLHttpRequest();
                 xhr.open('GET', `/api/shoppingcart/${this.shoppingCartId}`);
+                this.csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
                 xhr.setRequestHeader('X-CSRF-TOKEN', this.csrfToken);
                 xhr.onload = () => {
                     let result = JSON.parse(xhr.responseText);
@@ -156,7 +165,8 @@
                 this.getAllArticles();
             }
             this.updateCartDisplay();
-            this.csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+
         }
     }
 </script>
@@ -175,7 +185,8 @@
             </tr>
         </table>
     </div>
-    <input type="text" name="search" v-model="articleSearchTerm">
+    <input type="text" name="search" v-model="articleSearchTerm"> <br>
+    <input type="number" name="page" v-model="page" placeholder="Seite">
     <table>
         <tr v-for="article in articleSearchResults" v-bind:key="articleSearchResults.id">
             <td>{{article.name}}</td>
