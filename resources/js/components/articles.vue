@@ -171,34 +171,74 @@
 </script>
 
 <template>
-    <div id="cartDisplay" ref="cartDisplay">
-        <h2>Warenkorb</h2>
-        <span id="cartCount">Anzahl Produkte: {{shoppingCartCount}}</span> <br>
-        <span id="pricetag">Preis: {{shoppingCartPrice}}€</span> <br>
-        <span id="avgPrice">Durchschnittspreis: {{shoppingCartAvg}}€</span>
-        <table id="shoppingcartItems">
-            <tr v-for="article in articleShoppingCart">
-                <td v-if="article.id">{{article.name}}</td>
-                <td v-if="article.id">{{article.price}}€</td>
-                <td v-if="article.id"><button class="removeFromCartButton" :data-id="'Artikel' + article.id" @click="removeFromCart(article)">-</button></td>
+    <div class="articles">
+        <div class="articles__cartDisplay" ref="cartDisplay">
+            <h2 class="articles__cartDisplay--title">Warenkorb</h2>
+            <span class="articles__cartDisplay--itemCount">Anzahl Produkte: {{shoppingCartCount}}</span> <br>
+            <span class="articles__cartDisplay--totalPrice">Preis: {{shoppingCartPrice}}€</span> <br>
+            <span class="articles__cartDisplay--avgPrice">Durchschnittspreis: {{shoppingCartAvg}}€</span>
+            <table class="articles__cartDisplay--items">
+                <tr v-for="article in articleShoppingCart">
+                    <td v-if="article.id">{{article.name}}</td>
+                    <td v-if="article.id">{{article.price}}€</td>
+                    <td v-if="article.id"><button class="removeFromCartButton" :data-id="'Artikel' + article.id" @click="removeFromCart(article)">-</button></td>
+                </tr>
+            </table>
+        </div>
+        <input type="text" name="search" v-model="articleSearchTerm" class="articles__searchInput">
+        <table class="articles__table">
+            <tr v-for="article in articleSearchResults" v-bind:key="articleSearchResults.id" class="articles__table--row">
+                <td>{{article.name}}</td>
+                <td>{{article.price}}</td>
+                <td>{{article.description}}</td>
+                <td>{{article.creator_id}}</td>
+                <td>{{article.createdate}}</td>
+                <td><img :src="article.image_path" alt="Article Image"></td>
+                <td><button class="addToCartButton" :data-id="'Artikel' + article.id" @click="addToCart(article)" :ref="el => addToCartButtons[article.id] = el">+</button></td>
+                <td><button class="buyButton" @click="buyArticle(article.id)">Kaufen</button></td>
             </tr>
         </table>
     </div>
-    <input type="text" name="search" v-model="articleSearchTerm">
-    <table>
-        <tr v-for="article in articleSearchResults" v-bind:key="articleSearchResults.id">
-            <td>{{article.name}}</td>
-            <td>{{article.price}}</td>
-            <td>{{article.description}}</td>
-            <td>{{article.creator_id}}</td>
-            <td>{{article.createdate}}</td>
-            <td><img :src="article.image_path" alt="Article Image"></td>
-            <td><button class="addToCartButton" :data-id="'Artikel' + article.id" @click="addToCart(article)" :ref="el => addToCartButtons[article.id] = el">+</button></td>
-            <td><button class="buyButton" @click="buyArticle(article.id)">Kaufen</button></td>
-        </tr>
-    </table>
 </template>
 
-<style scoped>
 
+<style lang="scss" scoped>
+$font-color: #007BFF;
+$background-color: lightgray;
+$hover-color: #f0f0f0;
+
+.articles {
+    background-color: $background-color;
+    color: $font-color;
+
+    &__table {
+        width: 100%;
+        border-collapse: collapse;
+
+        &--row {
+            border-bottom: 1px solid darken($background-color, 10%);
+
+            &:hover {
+                background-color: $hover-color;
+                color: darken($font-color, 22%);
+                font-weight: bold;
+            }
+        }
+    }
+
+    &__cartDisplay {
+        margin-bottom: 20px;
+
+        &--title {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+
+        &--itemCount,
+        &--totalPrice,
+        &--avgPrice {
+            margin-bottom: 5px;
+        }
+    }
+}
 </style>
