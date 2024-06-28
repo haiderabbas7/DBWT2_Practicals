@@ -19,6 +19,7 @@ const vm = createApp({
         return {
             //hier benutze ich 1 als placeholder
             userID: 1,
+            articleId: -1,
             newArticle_name: '',
             newArticle_price: '',
             newArticle_description: '',
@@ -33,7 +34,6 @@ const vm = createApp({
         Sitebody,
         Sitefooter
     },
-
     methods: {
         //der gleiche code wie im Button EventListener, nur natürlich etwas angepasst
         sendNewArticleInfo: function () {
@@ -106,8 +106,23 @@ const vm = createApp({
         };
 
 
-        //let socket_articleOnSale = new WebSocket('ws://localhost:8081/articleOnSale');
-        //hier noch code zum handeln der Aufg13, mach ich gleich
+
+        let socket_articleOnSale = new WebSocket('ws://localhost:8081/articleOnSale');
+        socket_articleOnSale.onopen = (event) => {
+            socket_articleOnSale.send(this.userID);
+        };
+        socket_articleOnSale.onclose = (closeEvent) => {
+            console.log(
+                'Connection clsed' +
+                ': code=', closeEvent.code,
+                '; reason=', closeEvent.reason);
+        };
+        socket_articleOnSale.onmessage = (msgEvent) => {
+            let data = JSON.parse(msgEvent.data);
+            let message = data.message;
+            this.articleId = data.articleId;
+            alert(message);
+        };
     }
 }).mount('#app');
 

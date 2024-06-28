@@ -9,7 +9,7 @@
 </head>
 <body id="app">
     <siteheader></siteheader>
-    <sitebody @impressum="handleShowImpressum" :impressum="impressum"></sitebody>
+    <sitebody @impressum="handleShowImpressum" :impressum="impressum" :user-id="userID" :article-id="articleId"></sitebody>
     <sitefooter @impressum="handleShowImpressum"></sitefooter>
 </body>
 </html>

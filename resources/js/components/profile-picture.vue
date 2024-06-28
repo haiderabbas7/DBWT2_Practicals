@@ -11,9 +11,9 @@ export default {
             size: 80,
             square: false,
             // "bauhaus" | "beam" | "marble" | "pixel" | "ring" | "sunset"
-            variant: "pixel",
+            variant: "beam",
             //hier kann man verschiedene zeichenfolgen eingeben, um das muster zu ändern
-            name: "abcde",
+            name: "",
             colors: this.generateRandomColors(5)
         };
     },

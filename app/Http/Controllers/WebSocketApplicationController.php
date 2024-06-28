@@ -12,18 +12,19 @@ require dirname(__DIR__, 3) . '/vendor/autoload.php';
 class WebSocketApplicationController
 {
     //Kümmert sich darum, die Nachricht als JSON zu verpacken und als Nachricht von der Application zu labeln
-    private function jsonEncoder($msg, $article): false|string {
+    private function jsonEncoder($msg, $article, $opcode): false|string {
         $data = [
             "fromApplication" => true,
+            "opcode" => $opcode,
             "msg" => $msg,
             "article" => $article
         ];
         return json_encode($data);
     }
 
-    public function sendMaintenanceMessage($msg, $article): void{
-        \Ratchet\Client\connect('ws://localhost:8081/maintenance')->then(function($conn) use ($msg, $article) {
-            $jsonEncoded = $this->jsonEncoder($msg, $article);
+    public function sendMaintenanceMessage($msg, $article, $opcode=0): void{
+        \Ratchet\Client\connect('ws://localhost:8081/maintenance')->then(function($conn) use ($msg, $article, $opcode) {
+            $jsonEncoded = $this->jsonEncoder($msg, $article, $opcode);
             $conn->send($jsonEncoded);
             $conn->close();
         }, function ($e) {
@@ -31,9 +32,9 @@ class WebSocketApplicationController
         });
     }
 
-    public function sendArticleSoldMessage($msg, $article): void{
-        \Ratchet\Client\connect('ws://localhost:8081/articleSold')->then(function($conn) use ($msg, $article) {
-            $jsonEncoded = $this->jsonEncoder($msg, $article);
+    public function sendArticleSoldMessage($msg, $article, $opcode=0): void{
+        \Ratchet\Client\connect('ws://localhost:8081/articleSold')->then(function($conn) use ($msg, $article, $opcode) {
+            $jsonEncoded = $this->jsonEncoder($msg, $article, $opcode);
             $conn->send($jsonEncoded);
             $conn->close();
         }, function ($e) {
@@ -41,9 +42,9 @@ class WebSocketApplicationController
         });
     }
 
-    public function sendArticleOnSaleMessage($msg, $article): void{
-        \Ratchet\Client\connect('ws://localhost:8081/articleOnSale')->then(function($conn) use ($msg, $article) {
-            $jsonEncoded = $this->jsonEncoder($msg, $article);
+    public function sendArticleOnSaleMessage($msg, $article, $opcode=0): void{
+        \Ratchet\Client\connect('ws://localhost:8081/articleOnSale')->then(function($conn) use ($msg, $article, $opcode) {
+            $jsonEncoded = $this->jsonEncoder($msg, $article, $opcode);
             $conn->send($jsonEncoded);
             $conn->close();
         }, function ($e) {

@@ -3,6 +3,7 @@
 
     export default {
         name: "articles",
+        props: ['userId', 'articleId'],
         data() {
             return {
                 csrfToken: null,
@@ -29,7 +30,7 @@
         methods: {
             getAllArticles: function() {
                 let xhr = new XMLHttpRequest();
-                xhr.open('GET','/api/articles');
+                xhr.open('GET',`/api/articles?userId=${this.userId}`);
                 xhr.onload = () => {
                     if(xhr.status === 200) {
                         let results = JSON.parse(xhr.responseText);
@@ -51,7 +52,7 @@
                 if (this.articleSearchTerm.length > 0) {
                     try {
                         let xhr = new XMLHttpRequest();
-                        xhr.open('GET', `/api/articles?search=${this.articleSearchTerm}`);
+                        xhr.open('GET', `/api/articles?search=${this.articleSearchTerm}&userId=${this.userId}`);
                         xhr.onload = () => {
                             let results = JSON.parse(xhr.responseText);
                             this.articleSearchResults = results.map(article => ({
@@ -152,6 +153,18 @@
                     .catch(error => {
                         console.error(error);
                     });
+            },
+            discountArticle(articleId){
+                axios.post(`/api/articles/${articleId}/discounted`)
+                    .then(response => {
+                        console.log(response.data);
+                    })
+                    .catch(error => {
+                        console.error(error);
+                    });
+            },
+            highlightArticle(articleId) {
+                console.log(articleId)
             }
         },
         mounted() {
@@ -196,6 +209,7 @@
                 <td><img :src="article.image_path" alt="Article Image"></td>
                 <td><button class="addToCartButton" :data-id="'Artikel' + article.id" @click="addToCart(article)" :ref="el => addToCartButtons[article.id] = el">+</button></td>
                 <td><button class="buyButton" @click="buyArticle(article.id)">Kaufen</button></td>
+                <td v-if="article.creator_id === userId"><button class="discountButton" @click="discountArticle(article.id)">Artikel als Angebot anbieten</button></td>
             </tr>
         </table>
     </div>
@@ -222,6 +236,11 @@ $hover-color: #f0f0f0;
                 background-color: $hover-color;
                 color: darken($font-color, 22%);
                 font-weight: bold;
+            }
+
+            &--highlighted {
+                border: 2px solid red;
+                box-shadow: 0 0 10px red;
             }
         }
     }

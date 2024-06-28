@@ -89,12 +89,20 @@ class ArticlesController
 
     public function search_api(Request $request) {
         $search = $request->get('search');
+        $userId = $request->get('userId');
+        $articleIds = [];
         $articles = isset($search) ? DB::table('article')
             ->whereRaw('LOWER(name) LIKE ?', ['%' . strtolower($search) . '%'])
             ->get() : DB::table('article')->get();
         foreach ($articles as $article) {
             $article->image_path = $this->getArticleImagePath($article->id);
+            $articleIds[] = $article->id;
         }
+
+        //FLOW 1: schickt dem broadcaster die angezeigte artikelmenge des clients mit userId
+        $webSocketApplicationController = new WebSocketApplicationController();
+        $webSocketApplicationController->sendArticleOnSaleMessage($userId, $articleIds, 1);
+
         return response()->json($articles);
     }
 
@@ -108,5 +116,16 @@ class ArticlesController
         //schickt die userID mit dem websocket controller an den broadcaster
         $webSocketApplicationController = new WebSocketApplicationController();
         $webSocketApplicationController->sendArticleSoldMessage($userID, $article);
+    }
+
+
+    public function articleOnSale_api(Request $request){
+        //holt sich die articleID aus der Route und findet den dazugehörigen User. einen fehlerfall kann es nicht geben
+        $articleID = $request->route('id');
+        $article = json_decode(Article::find($articleID))->name;
+
+        //schickt die userID mit dem websocket controller an den broadcaster
+        $webSocketApplicationController = new WebSocketApplicationController();
+        $webSocketApplicationController->sendArticleOnSaleMessage($articleID, $article, 2);
     }
 }

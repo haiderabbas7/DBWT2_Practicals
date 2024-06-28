@@ -54,13 +54,14 @@ class MaintenanceBroadcaster implements MessageComponentInterface{
 
     public function onOpen(ConnectionInterface $conn) {
         $this->clients->attach($conn);
-        $data = [
+        //HAB DAS AUSGESTELLT, DIE GANZEN NACHRICHTEN FUCKEN SO AB
+        /*$data = [
             'message' => "In Kürze verbessern wir Abalo für Sie!\nNach einer kurzen Pause sind wir wieder\nfür Sie da! Versprochen."
         ];
         $json = json_encode($data);
         foreach ($this->clients as $client) {
             $client->send($json);
-        }
+        }*/
     }
 
     public function onMessage(ConnectionInterface $from, $msg) {
@@ -85,7 +86,7 @@ class ArticleSoldBroadcaster implements MessageComponentInterface{
     }
 
     private function printConnectedUsers(){
-        echo "\nUsers connected: ";
+        echo "\nUsers connected to ArticleSold: ";
         foreach ($this->clients as $conn) {
             $value = $this->clients[$conn];
             echo "$value ";
@@ -153,12 +154,78 @@ class ArticleOnSaleBroadcaster implements MessageComponentInterface{
         $this->clients = new \SplObjectStorage;
     }
 
+    private function printConnectedUsers(){
+        echo "\nUsers connected to ArticleOnSale: ";
+        foreach ($this->clients as $conn) {
+            $userId = $this->clients[$conn]['userId'];
+            $articleIds = $this->clients[$conn]['articleIds'];
+            $articleIds_string = implode(", ", $articleIds);
+            echo "$userId [$articleIds_string], ";
+        }
+    }
+
     public function onOpen(ConnectionInterface $conn) {
-        $this->clients->attach($conn);
+        $this->clients->attach($conn, ['userId' => -1, 'articleIds' => []]);
+        echo "\nopen";
+        $this->printConnectedUsers();
     }
 
     public function onMessage(ConnectionInterface $from, $msg) {
-        echo 'Message received: ' . $msg;
+        //guck nach, falls noch keine userID für diesen client gespeichert wurde. falls ja, dann speichere die $msg als ID
+        if ($this->clients[$from]['userId'] == -1 && is_numeric($msg)) {
+            $this->clients->detach($from);
+            $this->clients->attach($from, ['userId' => intval($msg), 'articleIds' => []]);
+        }
+        $decodedMsg = json_decode($msg);
+        //wenn es ein JSON ist...
+        if (json_last_error() == JSON_ERROR_NONE) {
+            //..und das Attribut fromApplication gesetzt ist, so handelt es sich um eine Nachricht von der Anwendung
+            if (isset($decodedMsg->fromApplication) && $decodedMsg->fromApplication === true) {
+                //FLOW 1: guck notizen bin zu faul kommentare zu schreiben
+                if($decodedMsg->opcode === 1){
+                    $userID = $decodedMsg->msg;
+                    $articleIds = $decodedMsg->article;
+                    foreach ($this->clients as $client) {
+                        if ($this->clients[$client]['userId'] == $userID) {
+                            $this->clients->detach($client);
+                            $this->clients->attach($client, ['userId' => $userID, 'articleIds' => $articleIds]);
+                            break;
+                        }
+                    }
+                }
+                //FLOW 2: guck notizen bin zu faul kommentare zu schreiben
+                else if($decodedMsg->opcode === 2){
+                    $articleId = $decodedMsg->msg;
+                    $article = $decodedMsg->article;
+
+                    /*
+                     * Hier soll passieren:
+                     * aus $clients alle clients rausholen, die $articleId in ihrer $articleIds array gespeichert haben
+                     * rausholen also zwischenspeichern
+                     * und nachdem man alle clients durchgegangen ist, Nachricht zusammenbauen wie in Aufg12
+                     * Und an alle gefundenen clients die nachricht schicken
+                     * */
+                    $watching_clients = [];
+                    foreach ($this->clients as $client) {
+                        if (in_array($articleId, $this->clients[$client]['articleIds'])) {
+                            $watching_clients[] = $client;
+                        }
+                    }
+                    if ($watching_clients !== null) {
+                        $data = [
+                            'message' => "Der Artikel $article wird nun günstiger angeboten! Greifen Sie schnell zu.",
+                            'articleId' => $articleId
+                        ];
+                        $json = json_encode($data);
+                        foreach ($watching_clients as $client) {
+                            $client->send($json);
+                        }
+                    }
+                }
+            }
+        }
+        echo "\nmessage: $msg";
+        $this->printConnectedUsers();
     }
 
     public function onClose(ConnectionInterface $conn) {
