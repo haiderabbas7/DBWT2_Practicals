@@ -15,12 +15,14 @@
                 shoppingCartAvg: 0,
                 shoppingCartId: 1,
                 addToCartButtons: {},
-                highlightedArticles: []
+                highlightedArticles: [],
+                page: 1
             }
         },
         watch: {
             articleSearchTerm(newVal, oldVal) {
                 if(newVal.length >= 3 || oldVal.length > newVal.length) {
+                    this.page = 1;
                     this.searchArticles();
                 }
                 else {
@@ -32,6 +34,9 @@
                     this.highlightedArticles.push(newVal);
                 }
                 console.log([...this.highlightedArticles]);
+            },
+            page() {
+                this.searchArticles();
             }
         },
         methods: {
@@ -56,33 +61,30 @@
             },
             searchArticles: function () { // Wenn >= 2 automatisch Ausführen
                 //wenn searchTerm >= 2 ist, mach API call und pack JSON response auf vue variable articleSearchResults
-                if (this.articleSearchTerm.length > 0) {
-                    try {
-                        let xhr = new XMLHttpRequest();
-                        xhr.open('GET', `/api/articles?search=${this.articleSearchTerm}&userId=${this.userId}`);
-                        xhr.onload = () => {
-                            let results = JSON.parse(xhr.responseText);
-                            this.articleSearchResults = results.map(article => ({
-                                id: article.id,
-                                name: article.name,
-                                price: article.price,
-                                description: article.description,
-                                creator_id: article.creator_id,
-                                createdate: article.createdate,
-                                image_path: article.image_path
-                            })).slice(0, 5);
-                        }
-                        xhr.send();
-                    } catch (error) {
-                        console.error('Error fetching articles: ' + error);
+                try {
+                    let xhr = new XMLHttpRequest();
+                    xhr.open('GET', `/api/articles?search=${this.articleSearchTerm}&userId=${this.userId}&page=${this.page}`);
+                    xhr.onload = () => {
+                        let results = JSON.parse(xhr.responseText);
+                        this.articleSearchResults = results.map(article => ({
+                            id: article.id,
+                            name: article.name,
+                            price: article.price,
+                            description: article.description,
+                            creator_id: article.creator_id,
+                            createdate: article.createdate,
+                            image_path: article.image_path
+                        }));
                     }
-                } else {
-                    this.getAllArticles();
+                    xhr.send();
+                } catch (error) {
+                    console.error('Error fetching articles: ' + error);
                 }
             },
             addToCart: function (article) {
                 let xhr = new XMLHttpRequest();
                 xhr.open('POST', '/api/shoppingcart');
+                this.csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
                 xhr.setRequestHeader('X-CSRF-TOKEN', this.csrfToken);
 
                 xhr.onload = () => {
@@ -97,6 +99,7 @@
 
                 let xhr = new XMLHttpRequest();
                 xhr.open('DELETE', `/api/shoppingcart/${this.shoppingCartId}/articles/${rArticle.id}`);
+                this.csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
                 xhr.setRequestHeader('X-CSRF-TOKEN', this.csrfToken);
                 xhr.onload = () => {
                     this.updateCartDisplay();
@@ -112,6 +115,7 @@
             updateCartDisplay: function () {
                 let xhr = new XMLHttpRequest();
                 xhr.open('GET', `/api/shoppingcart/${this.shoppingCartId}`);
+                this.csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
                 xhr.setRequestHeader('X-CSRF-TOKEN', this.csrfToken);
                 xhr.onload = () => {
                     let result = JSON.parse(xhr.responseText);
@@ -175,48 +179,44 @@
             let params = new URLSearchParams(window.location.search);
             this.articleSearchTerm = params.get('search') || '';
             // Articles werden per API Call geladen, nicht mehr über Controller Umweg
-            if(this.articleSearchTerm.length > 0) {
-                this.searchArticles();
-            }
-            else {
-                this.getAllArticles();
-            }
+            this.searchArticles();
+
             this.updateCartDisplay();
-            this.csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+
         }
     }
 </script>
 
 <template>
-    <div class="articles">
-        <div class="articles__cartDisplay" ref="cartDisplay">
-            <h2 class="articles__cartDisplay--title">Warenkorb</h2>
-            <span class="articles__cartDisplay--itemCount">Anzahl Produkte: {{shoppingCartCount}}</span> <br>
-            <span class="articles__cartDisplay--totalPrice">Preis: {{shoppingCartPrice}}€</span> <br>
-            <span class="articles__cartDisplay--avgPrice">Durchschnittspreis: {{shoppingCartAvg}}€</span>
-            <table class="articles__cartDisplay--items">
-                <tr v-for="article in articleShoppingCart">
-                    <td v-if="article.id">{{article.name}}</td>
-                    <td v-if="article.id">{{article.price}}€</td>
-                    <td v-if="article.id"><button class="removeFromCartButton" :data-id="'Artikel' + article.id" @click="removeFromCart(article)">-</button></td>
-                </tr>
-            </table>
-        </div>
-        <input type="text" name="search" v-model="articleSearchTerm" class="articles__searchInput">
-        <table class="articles__table">
-            <tr v-for="article in articleSearchResults" class="articles__table__row" v-bind:key="article.id" :class="{ 'articles__table__row--highlighted': highlightedArticles.includes(article.id.toString())}" >
-                <td>{{article.name}}</td>
-                <td>{{article.price}}</td>
-                <td>{{article.description}}</td>
-                <td>{{article.creator_id}}</td>
-                <td>{{article.createdate}}</td>
-                <td><img :src="article.image_path" alt="Article Image"></td>
-                <td><button class="addToCartButton" :data-id="'Artikel' + article.id" @click="addToCart(article)" :ref="el => addToCartButtons[article.id] = el">+</button></td>
-                <td><button class="buyButton" @click="buyArticle(article.id)">Kaufen</button></td>
-                <td v-if="article.creator_id === userId"><button class="discountButton" @click="discountArticle(article.id)">Artikel als Angebot anbieten</button></td>
+    <div class="articles__cartDisplay" ref="cartDisplay">
+        <h2 class="articles__cartDisplay--title">Warenkorb</h2>
+        <span class="articles__cartDisplay--itemCount">Anzahl Produkte: {{shoppingCartCount}}</span> <br>
+        <span class="articles__cartDisplay--totalPrice">Preis: {{shoppingCartPrice}}€</span> <br>
+        <span class="articles__cartDisplay--avgPrice">Durchschnittspreis: {{shoppingCartAvg}}€</span>
+        <table class="articles__cartDisplay--items">
+            <tr v-for="article in articleShoppingCart">
+                <td v-if="article.id">{{article.name}}</td>
+                <td v-if="article.id">{{article.price}}€</td>
+                <td v-if="article.id"><button class="removeFromCartButton" :data-id="'Artikel' + article.id" @click="removeFromCart(article)">-</button></td>
             </tr>
         </table>
     </div>
+    <input type="text" name="search" v-model="articleSearchTerm"> <br>
+    <input type="number" name="page" v-model="page" placeholder="Seite">
+    <table class="articles__table">
+        <tr v-for="article in articleSearchResults" v-bind:key="articleSearchResults.id"  class="articles__table__row" :class="{ 'articles__table__row--highlighted': highlightedArticles.includes(article.id.toString())}" >
+            <td>{{article.name}}</td>
+            <td>{{article.price}}</td>
+            <td>{{article.description}}</td>
+            <td>{{article.creator_id}}</td>
+            <td>{{article.createdate}}</td>
+            <td><img :src="article.image_path" alt="Article Image"></td>
+            <td><button class="addToCartButton" :data-id="'Artikel' + article.id" @click="addToCart(article)" :ref="el => addToCartButtons[article.id] = el">+</button></td>
+            <td><button class="buyButton" @click="buyArticle(article.id)">Kaufen</button></td>
+            <td v-if="article.creator_id === userId"><button class="discountButton" @click="discountArticle(article.id)">Artikel als Angebot anbieten</button></td>
+        </tr>
+    </table>
 </template>
 
 

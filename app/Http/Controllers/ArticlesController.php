@@ -91,9 +91,14 @@ class ArticlesController
         $search = $request->get('search');
         $userId = $request->get('userId');
         $articleIds = [];
+        $page = $request->get('page', 1);
+        $limit = 5;
+        $offset = ($page - 1) * $limit;
         $articles = isset($search) ? DB::table('article')
             ->whereRaw('LOWER(name) LIKE ?', ['%' . strtolower($search) . '%'])
-            ->get() : DB::table('article')->get();
+            ->limit($limit)->offset($offset)
+            ->get()
+            : DB::table('article')->limit($limit)->offset($offset)->get();
         foreach ($articles as $article) {
             $article->image_path = $this->getArticleImagePath($article->id);
             $articleIds[] = $article->id;
