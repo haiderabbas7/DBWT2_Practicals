@@ -14,8 +14,7 @@ export default {
 
 <template>
     <div>
-        <!-- in articles.vue -->
-        <Articles v-if="!impressum" :user-id="userId" :article-id="articleId" @articleIdChanged="highlightArticle"></Articles>
+        <Articles v-if="!impressum" :user-id="userId" :article-id="articleId"></Articles>
         <Impressum v-else></Impressum>
     </div>
 </template>

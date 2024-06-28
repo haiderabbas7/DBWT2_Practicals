@@ -14,7 +14,8 @@
                 shoppingCartPrice: 0,
                 shoppingCartAvg: 0,
                 shoppingCartId: 1,
-                addToCartButtons: {}
+                addToCartButtons: {},
+                highlightedArticles: []
             }
         },
         watch: {
@@ -25,6 +26,12 @@
                 else {
                     this.getAllArticles();
                 }
+            },
+            articleId(newVal, oldVal) {
+                if (!this.highlightedArticles.includes(newVal)) {
+                    this.highlightedArticles.push(newVal);
+                }
+                console.log([...this.highlightedArticles]);
             }
         },
         methods: {
@@ -162,9 +169,6 @@
                     .catch(error => {
                         console.error(error);
                     });
-            },
-            highlightArticle(articleId) {
-                console.log(articleId)
             }
         },
         mounted() {
@@ -200,7 +204,7 @@
         </div>
         <input type="text" name="search" v-model="articleSearchTerm" class="articles__searchInput">
         <table class="articles__table">
-            <tr v-for="article in articleSearchResults" v-bind:key="articleSearchResults.id" class="articles__table--row">
+            <tr v-for="article in articleSearchResults" class="articles__table__row" v-bind:key="article.id" :class="{ 'articles__table__row--highlighted': highlightedArticles.includes(article.id.toString())}" >
                 <td>{{article.name}}</td>
                 <td>{{article.price}}</td>
                 <td>{{article.description}}</td>
@@ -229,7 +233,7 @@ $hover-color: #f0f0f0;
         width: 100%;
         border-collapse: collapse;
 
-        &--row {
+        &__row {
             border-bottom: 1px solid darken($background-color, 10%);
 
             &:hover {
@@ -239,8 +243,11 @@ $hover-color: #f0f0f0;
             }
 
             &--highlighted {
-                border: 2px solid red;
-                box-shadow: 0 0 10px red;
+                border: $font-color;
+                box-shadow: 0 0 30px $font-color;
+                background-color: #56A8FF; /* leicht transparentes Orange */
+                color: black; /* Textfarbe */
+                transition: all 0.3s ease; /* Übergangsanimation */
             }
         }
     }
