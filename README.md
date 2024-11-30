@@ -7,7 +7,7 @@ In this module, DBWT2 (Database and Web Technologies 2), I have deepened my know
 - **PHP**: Backend programming language
 - **Laravel**: Web application framework
 - **Composer**: Dependency management
-- **SQL**: Database management
+- **MariaDB**: Database management
 - **JavaScript**: Frontend scripting
 - **NPM**: Node package manager
 - **Vue.js**: Frontend framework
